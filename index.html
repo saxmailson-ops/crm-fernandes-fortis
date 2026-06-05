@@ -829,7 +829,7 @@ function timeAgo(ts) {
 
 function todayLeadsCount() {
   const today = new Date().toDateString();
-  return leads.filter(l => new Date(l.createdAt).toDateString() === today).length;
+  return leads.filter(l => { const ts = l.createdAt?.toMillis ? l.createdAt.toMillis() : l.createdAt; return new Date(ts).toDateString() === today; }).length;
 }
 
 // ===== SENHAS POR PERFIL =====
@@ -965,7 +965,7 @@ function visibleLeads() {
   // Vendedor v&ecirc; leads com >= 15 min ou que j&aacute; foram movidos de "novo"
   return leads.filter(l => {
     if (currentRole === 'gestor') return true;
-    const age = (Date.now() - l.createdAt) / 60000;
+    const ts = l.createdAt?.toMillis ? l.createdAt.toMillis() : l.createdAt; const age = (Date.now() - ts) / 60000;
     return age >= 15 || l.stage !== 'novo';
   });
 }
@@ -975,12 +975,12 @@ function renderKanban() {
 
   // New leads alert (< 16 min, stage=novo)
   const justArrived = leads.filter(l => {
-    const age = (Date.now() - l.createdAt) / 60000;
+    const ts = l.createdAt?.toMillis ? l.createdAt.toMillis() : l.createdAt; const age = (Date.now() - ts) / 60000;
     return age >= 15 && age < 16 && l.stage === 'novo';
   });
   const alertEl = document.getElementById('newLeadAlert');
   const waitingContact = all.filter(l => {
-    const age = (Date.now() - l.createdAt) / 60000;
+    const ts = l.createdAt?.toMillis ? l.createdAt.toMillis() : l.createdAt; const age = (Date.now() - ts) / 60000;
     return l.stage === 'novo' && age >= 15;
   });
   if (waitingContact.length > 0) {
@@ -1070,7 +1070,7 @@ async function addNote(id) {
 
 function buildCard(lead) {
   const div = document.createElement('div');
-  const ageMin = (Date.now() - lead.createdAt) / 60000;
+  const tsMin = lead.createdAt?.toMillis ? lead.createdAt.toMillis() : lead.createdAt; const ageMin = (Date.now() - tsMin) / 60000;
   const isNew = lead.stage === 'novo' && ageMin < 30;
   const isUrgent = lead.stage === 'novo' && ageMin >= 15 && ageMin < 60;
   div.className = `lead-card${isNew && ageMin < 60 ? ' new-lead' : ''}`;
@@ -1139,7 +1139,7 @@ function openModal(id) {
     <div class="modal-field"><label>Placa</label><p>${lead.placa}</p></div>
     <div class="modal-field"><label>Seguro atual</label><p>${lead.seguro === 'sim' ? '&#128737;&#65039; Tem seguro' : '&#10060; Sem seguro'}</p></div>
     <div class="modal-field"><label>Est&aacute;gio atual</label><p>${s.label}</p></div>
-    <div class="modal-field"><label>Captado em</label><p>${new Date(lead.createdAt).toLocaleString('pt-BR')}</p></div>
+    <div class="modal-field"><label>Captado em</label><p>${new Date(lead.createdAt?.toMillis ? lead.createdAt.toMillis() : lead.createdAt).toLocaleString('pt-BR')}</p></div>
     <div class="modal-field">
       <label>&#128203; Hist&oacute;rico de anota&ccedil;&otilde;es (${(lead.notes||[]).length})</label>
       <div style="max-height:200px;overflow-y:auto;margin-top:6px">
