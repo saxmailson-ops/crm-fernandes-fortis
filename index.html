@@ -631,7 +631,7 @@
         <div class="pw-box" id="pw-sdr">
           <input class="pw-input" id="pwi-sdr" type="password" placeholder="Digite a senha..." onkeydown="if(event.key==='Enter')tentarLogin('sdr')" onclick="event.stopPropagation()" />
           <div class="pw-error" id="pwe-sdr">Senha incorreta. Tente novamente.</div>
-          <button class="btn-entrar" onclick="tentarLogin('sdr');event.stopPropagation()">Entrar ‚Üí</button>
+          <button class="btn-entrar" onclick="tentarLogin('sdr');event.stopPropagation()">Entrar</button>
         </div>
       </div>
     </div>
@@ -645,7 +645,7 @@
         <div class="pw-box" id="pw-vendedor">
           <input class="pw-input" id="pwi-vendedor" type="password" placeholder="Digite a senha..." onkeydown="if(event.key==='Enter')tentarLogin('vendedor')" onclick="event.stopPropagation()" />
           <div class="pw-error" id="pwe-vendedor">Senha incorreta. Tente novamente.</div>
-          <button class="btn-entrar" onclick="tentarLogin('vendedor');event.stopPropagation()">Entrar ‚Üí</button>
+          <button class="btn-entrar" onclick="tentarLogin('vendedor');event.stopPropagation()">Entrar</button>
         </div>
       </div>
     </div>
@@ -659,7 +659,7 @@
         <div class="pw-box" id="pw-gestor">
           <input class="pw-input" id="pwi-gestor" type="password" placeholder="Digite a senha..." onkeydown="if(event.key==='Enter')tentarLogin('gestor')" onclick="event.stopPropagation()" />
           <div class="pw-error" id="pwe-gestor">Senha incorreta. Tente novamente.</div>
-          <button class="btn-entrar" onclick="tentarLogin('gestor');event.stopPropagation()">Entrar ‚Üí</button>
+          <button class="btn-entrar" onclick="tentarLogin('gestor');event.stopPropagation()">Entrar</button>
         </div>
       </div>
     </div>
@@ -940,7 +940,7 @@ async function salvarLead() {
       placa: placa.toUpperCase(),
       seguro: selectedSeguro,
       stage: 'novo',
-      createdAt: Date.now(),
+      createdAt: Date.now(), // timestamp em ms
       notes: [],
       history: [{ stage: 'novo', at: Date.now() }]
     });
@@ -962,12 +962,8 @@ async function salvarLead() {
 
 // ===== KANBAN =====
 function visibleLeads() {
-  // Vendedor v&ecirc; leads com >= 15 min ou que j&aacute; foram movidos de "novo"
-  return leads.filter(l => {
-    if (currentRole === 'gestor') return true;
-    const ts = l.createdAt?.toMillis ? l.createdAt.toMillis() : l.createdAt; const age = (Date.now() - ts) / 60000;
-    return age >= 15 || l.stage !== 'novo';
-  });
+  // Todos os perfis v&ecirc;em leads imediatamente
+  return leads;
 }
 
 function renderKanban() {
