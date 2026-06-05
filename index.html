@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CRM Fernandes Fortis</title>
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #1a237e;
+      --primary-light: #3949ab;
+      --accent: #00c853;
+      --danger: #e53935;
+      --warn: #f57c00;
+      --info: #0288d1;
+      --purple: #7b1fa2;
+      --gray-50: #fafafa;
+      --gray-100: #f5f5f5;
+      --gray-200: #eeeeee;
+      --gray-300: #e0e0e0;
+      --gray-500: #9e9e9e;
+      --gray-700: #616161;
+      --gray-900: #212121;
+      --white: #ffffff;
+      --shadow: 0 2px 8px rgba(0,0,0,.12);
+      --shadow-lg: 0 8px 24px rgba(0,0,0,.15);
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--gray-100);
+      color: var(--gray-900);
+      min-height: 100vh;
+    }
+
+    /* ===== LOGIN / ROLE SELECTOR ===== */
+    .login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #1a237e 0%, #283593 50%, #3949ab 100%);
+    }
+    .login-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: var(--shadow-lg);
+      text-align: center;
+    }
+    .login-logo {
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -1px;
+      margin-bottom: 4px;
+    }
+    .login-subtitle {
+      color: var(--gray-500);
+      font-size: .9rem;
+      margin-bottom: 36px;
+    }
+    .role-btn {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+      padding: 18px 20px;
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius);
+      background: var(--white);
+      cursor: pointer;
+      transition: all .2s;
+      margin-bottom: 12px;
+      text-align: left;
+    }
+    .role-btn:hover { border-color: var(--primary-light); background: #f0f2ff; }
+    .role-btn .icon { font-size: 2rem; }
+    .role-btn .label { font-weight: 700; font-size: 1rem; color: var(--gray-900); }
+    .role-btn .desc  { font-size: .8rem; color: var(--gray-500); }
+
+    /* ===== TOP NAV ===== */
+    .topnav {
+      background: var(--primary);
+      color: var(--white);
+      padding: 0 20px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: var(--shadow);
+    }
+    .topnav-brand { font-weight: 800; font-size: 1.1rem; letter-spacing: .5px; }
+    .topnav-role {
+      font-size: .8rem;
+      background: rgba(255,255,255,.15);
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+    .logout-btn {
+      background: rgba(255,255,255,.15);
+      border: none; color: var(--white);
+      padding: 6px 14px; border-radius: 8px;
+      cursor: pointer; font-size: .85rem;
+      transition: background .2s;
+    }
+    .logout-btn:hover { background: rgba(255,255,255,.28); }
+
+    /* ===== SDR SCREEN ===== */
+    .sdr-screen {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+    .sdr-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .sdr-header h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .sdr-header p { color: var(--gray-500); font-size: .9rem; margin-top: 4px; }
+
+    .counter-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--primary);
+      color: var(--white);
+      border-radius: 40px;
+      padding: 10px 24px;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 28px;
+    }
+    .counter-badge .num {
+      font-size: 1.8rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .form-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      box-shadow: var(--shadow);
+    }
+    .form-group { margin-bottom: 18px; }
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      font-size: .88rem;
+      color: var(--gray-700);
+      margin-bottom: 6px;
+    }
+    .form-control {
+      width: 100%;
+      padding: 12px 14px;
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      font-size: .95rem;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .form-control:focus { border-color: var(--primary-light); }
+
+    .radio-group {
+      display: flex;
+      gap: 10px;
+    }
+    .radio-btn {
+      flex: 1;
+      padding: 12px;
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      background: var(--white);
+      cursor: pointer;
+      font-weight: 700;
+      font-size: .95rem;
+      text-align: center;
+      transition: all .2s;
+    }
+    .radio-btn.sim { color: var(--accent); }
+    .radio-btn.nao { color: var(--danger); }
+    .radio-btn.sim.active { background: #e8f5e9; border-color: var(--accent); }
+    .radio-btn.nao.active { background: #ffebee; border-color: var(--danger); }
+
+    .btn-primary {
+      width: 100%;
+      padding: 15px;
+      background: var(--primary);
+      color: var(--white);
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s;
+      margin-top: 8px;
+    }
+    .btn-primary:hover { background: var(--primary-light); }
+    .btn-primary:disabled { background: var(--gray-300); cursor: not-allowed; }
+
+    .success-toast {
+      position: fixed;
+      bottom: 24px; left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: var(--white);
+      padding: 14px 28px;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: .95rem;
+      box-shadow: var(--shadow-lg);
+      opacity: 0;
+      transition: opacity .3s;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .success-toast.show { opacity: 1; }
+
+    /* ===== KANBAN SCREEN ===== */
+    .kanban-screen { padding: 20px; }
+    .kanban-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .kanban-title { font-size: 1.3rem; font-weight: 800; color: var(--primary); }
+
+    .stats-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .stat-pill {
+      background: var(--white);
+      border-radius: 30px;
+      padding: 6px 16px;
+      font-size: .82rem;
+      font-weight: 600;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .kanban-board {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      padding-bottom: 16px;
+      align-items: flex-start;
+    }
+    .kanban-col {
+      flex: 0 0 280px;
+      background: var(--gray-200);
+      border-radius: var(--radius);
+      padding: 14px;
+      min-height: 400px;
+    }
+    .col-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .col-title {
+      font-size: .82rem;
+      font-weight: 800;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+    .col-count {
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--gray-500);
+      background: var(--white);
+      border-radius: 20px;
+      padding: 2px 10px;
+    }
+
+    /* Column colors */
+    .col-novo    .col-title { background: #e3f2fd; color: #1565c0; }
+    .col-contato .col-title { background: #e8f5e9; color: #2e7d32; }
+    .col-negoc   .col-title { background: #fff8e1; color: #e65100; }
+    .col-aguard  .col-title { background: #f3e5f5; color: #6a1b9a; }
+    .col-venda   .col-title { background: #e8f5e9; color: #1b5e20; }
+    .col-perdido .col-title { background: #ffebee; color: #b71c1c; }
+
+    /* Card */
+    .lead-card {
+      background: var(--white);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      margin-bottom: 10px;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s;
+      position: relative;
+    }
+    .lead-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+    .lead-card.hot::before {
+      content: '🔥';
+      position: absolute;
+      top: 10px; right: 10px;
+      font-size: .9rem;
+    }
+    .lead-card.new-lead::after {
+      content: 'NOVO';
+      position: absolute;
+      top: 10px; right: 10px;
+      background: #1565c0;
+      color: white;
+      font-size: .65rem;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .lead-name { font-weight: 700; font-size: .95rem; color: var(--gray-900); margin-bottom: 4px; }
+    .lead-meta {
+      font-size: .78rem;
+      color: var(--gray-500);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .lead-meta span { display: flex; align-items: center; gap: 3px; }
+    .badge-seguro {
+      font-size: .7rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 10px;
+      margin-top: 6px;
+      display: inline-block;
+    }
+    .badge-seguro.sim { background: #e8f5e9; color: var(--accent); }
+    .badge-seguro.nao { background: #ffebee; color: var(--danger); }
+
+    .card-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .btn-wa {
+      flex: 1;
+      background: #25d366;
+      color: var(--white);
+      border: none;
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: .78rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: background .2s;
+    }
+    .btn-wa:hover { background: #1eb856; }
+    .btn-move {
+      background: var(--primary);
+      color: var(--white);
+      border: none;
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: .78rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: background .2s;
+    }
+    .btn-move:hover { background: var(--primary-light); }
+    .btn-perdido {
+      background: var(--danger);
+      color: var(--white);
+      border: none;
+      border-radius: 8px;
+      padding: 8px 8px;
+      font-size: .78rem;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: background .2s;
+    }
+    .btn-perdido:hover { background: #c62828; }
+
+    .time-badge {
+      font-size: .7rem;
+      color: var(--gray-500);
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .time-badge.urgent { color: var(--warn); font-weight: 700; }
+
+    /* ===== NOTAS NO CARD ===== */
+    .card-notes {
+      margin-top: 8px;
+      border-top: 1px solid var(--gray-200);
+      padding-top: 8px;
+    }
+    .note-item {
+      background: #fffde7;
+      border-left: 3px solid #f9a825;
+      border-radius: 0 6px 6px 0;
+      padding: 6px 8px;
+      margin-bottom: 5px;
+      font-size: .76rem;
+      color: var(--gray-900);
+    }
+    .note-item .note-meta {
+      font-size: .68rem;
+      color: var(--gray-500);
+      margin-top: 2px;
+    }
+    .note-input-row {
+      display: flex;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .note-input {
+      flex: 1;
+      padding: 7px 10px;
+      border: 1.5px solid var(--gray-300);
+      border-radius: 6px;
+      font-size: .78rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .note-input:focus { border-color: var(--primary-light); }
+    .btn-note-add {
+      background: var(--primary);
+      color: var(--white);
+      border: none;
+      border-radius: 6px;
+      padding: 7px 12px;
+      font-size: .78rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background .2s;
+    }
+    .btn-note-add:hover { background: var(--primary-light); }
+    .notes-toggle {
+      font-size: .72rem;
+      color: var(--primary-light);
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 4px;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+    .notes-toggle:hover { text-decoration: underline; }
+
+    /* ===== MODAL ===== */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.5);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 200;
+      padding: 16px;
+    }
+    .modal {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      width: 100%; max-width: 420px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+    }
+    .modal h3 { font-size: 1.1rem; font-weight: 800; color: var(--primary); margin-bottom: 16px; }
+    .modal-close {
+      position: absolute; top: 16px; right: 16px;
+      background: none; border: none; font-size: 1.3rem;
+      cursor: pointer; color: var(--gray-500);
+      line-height: 1;
+    }
+    .modal-field { margin-bottom: 12px; }
+    .modal-field label { font-size: .8rem; font-weight: 600; color: var(--gray-500); }
+    .modal-field p { font-weight: 600; color: var(--gray-900); margin-top: 2px; }
+    .modal-stages {
+      display: flex; flex-direction: column; gap: 8px; margin-top: 16px;
+    }
+    .stage-btn {
+      padding: 10px 14px;
+      border: 2px solid var(--gray-200);
+      border-radius: 8px;
+      background: var(--white);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: .88rem;
+      text-align: left;
+      transition: all .2s;
+    }
+    .stage-btn:hover { border-color: var(--primary-light); background: #f0f2ff; color: var(--primary); }
+    .stage-btn.current { border-color: var(--primary); background: #e8eaf6; color: var(--primary); }
+
+    .obs-textarea {
+      width: 100%;
+      min-height: 80px;
+      border: 2px solid var(--gray-200);
+      border-radius: 8px;
+      padding: 10px;
+      font-size: .88rem;
+      font-family: inherit;
+      resize: vertical;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .obs-textarea:focus { border-color: var(--primary-light); }
+    .btn-save {
+      width: 100%;
+      padding: 12px;
+      background: var(--primary);
+      color: var(--white);
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: .95rem;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+    .btn-save:hover { background: var(--primary-light); }
+
+    .new-lead-alert {
+      background: linear-gradient(135deg, #1565c0, #1a237e);
+      color: var(--white);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: .88rem;
+      font-weight: 600;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(21,101,192,.4); }
+      50% { box-shadow: 0 0 0 8px rgba(21,101,192,0); }
+    }
+
+    /* Scrollbar kanban */
+    .kanban-board::-webkit-scrollbar { height: 6px; }
+    .kanban-board::-webkit-scrollbar-track { background: var(--gray-200); border-radius: 3px; }
+    .kanban-board::-webkit-scrollbar-thumb { background: var(--gray-500); border-radius: 3px; }
+
+    @media (max-width: 600px) {
+      .kanban-col { flex: 0 0 250px; }
+      .kanban-screen { padding: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===================== LOGIN ===================== -->
+<div id="loginScreen" class="login-screen">
+  <div class="login-card">
+    <div class="login-logo">Fernandes Fortis</div>
+    <div class="login-subtitle">CRM de Captação · Selecione seu perfil</div>
+    <button class="role-btn" onclick="login('sdr')">
+      <span class="icon">🚗</span>
+      <div>
+        <div class="label">Consultor de Relacionamento</div>
+        <div class="desc">Captação de leads em campo</div>
+      </div>
+    </button>
+    <button class="role-btn" onclick="login('vendedor')">
+      <span class="icon">💼</span>
+      <div>
+        <div class="label">Analista Comercial</div>
+        <div class="desc">Atendimento, Kanban e follow-up</div>
+      </div>
+    </button>
+    <button class="role-btn" onclick="login('gestor')">
+      <span class="icon">📊</span>
+      <div>
+        <div class="label">Gestor</div>
+        <div class="desc">Visão completa do pipeline</div>
+      </div>
+    </button>
+  </div>
+</div>
+
+<!-- ===================== NAV ===================== -->
+<nav class="topnav" id="topNav" style="display:none">
+  <div class="topnav-brand">⚡ Fernandes Fortis</div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span class="topnav-role" id="navRole"></span>
+    <button class="logout-btn" onclick="logout()">Sair</button>
+  </div>
+</nav>
+
+<!-- ===================== SDR SCREEN ===================== -->
+<div id="sdrScreen" style="display:none">
+  <div class="sdr-screen">
+    <div class="sdr-header">
+      <h1>📍 Captação de Lead</h1>
+      <p>Novo Prospecto</p>
+    </div>
+
+    <div style="text-align:center; margin-bottom:24px">
+      <div class="counter-badge">
+        <span>Leads captados hoje:</span>
+        <span class="num" id="sdrCounter">0</span>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div class="form-group">
+        <label>👤 Nome completo</label>
+        <input class="form-control" id="fNome" type="text" placeholder="Ex: João da Silva" />
+      </div>
+      <div class="form-group">
+        <label>📱 Contato (WhatsApp)</label>
+        <input class="form-control" id="fContato" type="tel" placeholder="(00) 00000-0000"
+          oninput="formatPhone(this)" maxlength="15" />
+      </div>
+      <div class="form-group">
+        <label>🚘 Placa do veículo</label>
+        <input class="form-control" id="fPlaca" type="text" placeholder="Ex: ABC-1234"
+          oninput="formatPlaca(this)" maxlength="8" style="text-transform:uppercase" />
+      </div>
+      <div class="form-group">
+        <label>🛡️ Tem seguro no momento?</label>
+        <div class="radio-group">
+          <button class="radio-btn sim" id="btnSim" onclick="selectSeguro('sim')">✅ Sim</button>
+          <button class="radio-btn nao" id="btnNao" onclick="selectSeguro('nao')">❌ Não</button>
+        </div>
+      </div>
+      <button class="btn-primary" id="btnSalvar" onclick="salvarLead()">
+        ➕ Cadastrar Lead
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== KANBAN SCREEN ===================== -->
+<div id="kanbanScreen" style="display:none">
+  <div class="kanban-screen">
+    <div class="kanban-top">
+      <div class="kanban-title">📋 Pipeline de Leads</div>
+      <div id="newLeadAlert" class="new-lead-alert" style="display:none">
+        🔔 <span id="newLeadAlertText"></span>
+      </div>
+    </div>
+
+    <div class="stats-row" id="statsRow"></div>
+
+    <div class="kanban-board" id="kanbanBoard"></div>
+  </div>
+</div>
+
+<!-- ===================== MODAL DETALHES ===================== -->
+<div class="modal-overlay" id="modalOverlay" style="display:none" onclick="closeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h3>📄 Detalhes do Lead</h3>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<div class="success-toast" id="toast"></div>
+
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, updateDoc, doc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+// ===== FIREBASE CONFIG =====
+const firebaseConfig = {
+  apiKey: "AIzaSyD4fgCu2LYsGRPBs4mrjgMTgzdEwFVxfZI",
+  authDomain: "fernandes-fortis-crm.firebaseapp.com",
+  projectId: "fernandes-fortis-crm",
+  storageBucket: "fernandes-fortis-crm.firebasestorage.app",
+  messagingSenderId: "869740513955",
+  appId: "1:869740513955:web:04604e3a2973f94529cd16"
+};
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+// ===== STATE =====
+let currentRole = null;
+let leads = [];
+let selectedSeguro = null;
+let unsubscribeLeads = null;
+
+// ===== STAGES CONFIG =====
+const STAGES = [
+  { id: 'novo',    label: 'NOVO LEAD',               color: '#1565c0', bg: '#e3f2fd', col: 'col-novo' },
+  { id: 'contato', label: 'CONTATO REALIZADO',        color: '#2e7d32', bg: '#e8f5e9', col: 'col-contato' },
+  { id: 'negoc',   label: 'NEGOCIAÇÃO',               color: '#e65100', bg: '#fff8e1', col: 'col-negoc' },
+  { id: 'aguard',  label: 'AGUARDANDO DOC/PAGAMENTO', color: '#6a1b9a', bg: '#f3e5f5', col: 'col-aguard' },
+  { id: 'venda',   label: 'VENDA',                    color: '#1b5e20', bg: '#e8f5e9', col: 'col-venda' },
+  { id: 'perdido', label: 'LEAD PERDIDO',             color: '#b71c1c', bg: '#ffebee', col: 'col-perdido' },
+];
+
+// ===== UTILS =====
+async function saveLeadToFirestore(lead) {
+  const { id, ...data } = lead;
+  await addDoc(collection(db, 'leads'), data);
+}
+
+async function updateLeadInFirestore(id, fields) {
+  await updateDoc(doc(db, 'leads', id), fields);
+}
+
+function formatPhone(el) {
+  let v = el.value.replace(/\D/g, '');
+  if (v.length > 11) v = v.slice(0, 11);
+  if (v.length <= 10)
+    el.value = v.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3').replace(/-$/, '');
+  else
+    el.value = v.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3').replace(/-$/, '');
+}
+
+function formatPlaca(el) {
+  let v = el.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+  if (v.length > 3) v = v.slice(0, 3) + '-' + v.slice(3, 7);
+  el.value = v;
+}
+
+function selectSeguro(val) {
+  selectedSeguro = val;
+  document.getElementById('btnSim').classList.toggle('active', val === 'sim');
+  document.getElementById('btnNao').classList.toggle('active', val === 'nao');
+}
+
+function showToast(msg, color) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = color || '#00c853';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+function timeAgo(ts) {
+  const diff = Math.floor((Date.now() - ts) / 60000);
+  if (diff < 1) return 'agora mesmo';
+  if (diff === 1) return '1 min atrás';
+  if (diff < 60) return `${diff} min atrás`;
+  const h = Math.floor(diff / 60);
+  return `${h}h atrás`;
+}
+
+function todayLeadsCount() {
+  const today = new Date().toDateString();
+  return leads.filter(l => new Date(l.createdAt).toDateString() === today).length;
+}
+
+// ===== AUTH =====
+function login(role) {
+  currentRole = role;
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('topNav').style.display = 'flex';
+  const labels = { sdr: '🚗 Consultor de Relacionamento', vendedor: '💼 Analista Comercial', gestor: '📊 Gestor' };
+  document.getElementById('navRole').textContent = labels[role];
+
+  // Listener em tempo real do Firestore
+  const q = query(collection(db, 'leads'), orderBy('createdAt', 'desc'));
+  unsubscribeLeads = onSnapshot(q, snapshot => {
+    leads = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+    if (role === 'sdr') {
+      updateSdrCounter();
+    } else {
+      renderKanban();
+    }
+  });
+
+  if (role === 'sdr') {
+    document.getElementById('sdrScreen').style.display = 'block';
+  } else {
+    document.getElementById('kanbanScreen').style.display = 'block';
+  }
+}
+
+function logout() {
+  if (unsubscribeLeads) { unsubscribeLeads(); unsubscribeLeads = null; }
+  currentRole = null;
+  selectedSeguro = null;
+  leads = [];
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('topNav').style.display = 'none';
+  document.getElementById('sdrScreen').style.display = 'none';
+  document.getElementById('kanbanScreen').style.display = 'none';
+  ['fNome','fContato','fPlaca'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('btnSim').classList.remove('active');
+  document.getElementById('btnNao').classList.remove('active');
+  selectedSeguro = null;
+}
+
+// ===== SDR =====
+function updateSdrCounter() {
+  document.getElementById('sdrCounter').textContent = todayLeadsCount();
+}
+
+async function salvarLead() {
+  const nome    = document.getElementById('fNome').value.trim();
+  const contato = document.getElementById('fContato').value.trim();
+  const placa   = document.getElementById('fPlaca').value.trim();
+
+  if (!nome)    { showToast('⚠️ Informe o nome', '#f57c00'); return; }
+  if (!contato) { showToast('⚠️ Informe o contato', '#f57c00'); return; }
+  if (!placa)   { showToast('⚠️ Informe a placa', '#f57c00'); return; }
+  if (!selectedSeguro) { showToast('⚠️ Selecione se tem seguro', '#f57c00'); return; }
+
+  const btnSalvar = document.getElementById('btnSalvar');
+  btnSalvar.disabled = true;
+  btnSalvar.textContent = 'Salvando...';
+
+  try {
+    await addDoc(collection(db, 'leads'), {
+      nome,
+      contato,
+      placa: placa.toUpperCase(),
+      seguro: selectedSeguro,
+      stage: 'novo',
+      createdAt: Date.now(),
+      notes: [],
+      history: [{ stage: 'novo', at: Date.now() }]
+    });
+
+    document.getElementById('fNome').value = '';
+    document.getElementById('fContato').value = '';
+    document.getElementById('fPlaca').value = '';
+    document.getElementById('btnSim').classList.remove('active');
+    document.getElementById('btnNao').classList.remove('active');
+    selectedSeguro = null;
+    showToast('✅ Lead cadastrado com sucesso!');
+  } catch(e) {
+    showToast('❌ Erro ao salvar. Verifique a conexão.', '#e53935');
+  } finally {
+    btnSalvar.disabled = false;
+    btnSalvar.textContent = '➕ Cadastrar Lead';
+  }
+}
+
+// ===== KANBAN =====
+function visibleLeads() {
+  // Vendedor vê leads com >= 15 min ou que já foram movidos de "novo"
+  return leads.filter(l => {
+    if (currentRole === 'gestor') return true;
+    const age = (Date.now() - l.createdAt) / 60000;
+    return age >= 15 || l.stage !== 'novo';
+  });
+}
+
+function renderKanban() {
+  const all = visibleLeads();
+
+  // New leads alert (< 16 min, stage=novo)
+  const justArrived = leads.filter(l => {
+    const age = (Date.now() - l.createdAt) / 60000;
+    return age >= 15 && age < 16 && l.stage === 'novo';
+  });
+  const alertEl = document.getElementById('newLeadAlert');
+  const waitingContact = all.filter(l => {
+    const age = (Date.now() - l.createdAt) / 60000;
+    return l.stage === 'novo' && age >= 15;
+  });
+  if (waitingContact.length > 0) {
+    alertEl.style.display = 'flex';
+    document.getElementById('newLeadAlertText').textContent =
+      `${waitingContact.length} lead${waitingContact.length > 1 ? 's aguardando contato' : ' aguardando contato'}!`;
+  } else {
+    alertEl.style.display = 'none';
+  }
+
+  // Stats
+  const statsRow = document.getElementById('statsRow');
+  const stageColors = { novo:'#1565c0', contato:'#2e7d32', negoc:'#e65100', aguard:'#7b1fa2', venda:'#1b5e20', perdido:'#e53935' };
+  const statLabels = { novo:'Novos', contato:'Contactados', negoc:'Negociação', aguard:'Aguard. Doc', venda:'Vendas', perdido:'Perdidos' };
+  let statsHtml = '';
+  STAGES.forEach(s => {
+    const cnt = all.filter(l => l.stage === s.id).length;
+    statsHtml += `<div class="stat-pill"><span class="dot" style="background:${stageColors[s.id]}"></span>${statLabels[s.id]}: <b>${cnt}</b></div>`;
+  });
+  statsRow.innerHTML = statsHtml;
+
+  // Board
+  const board = document.getElementById('kanbanBoard');
+  board.innerHTML = '';
+  STAGES.forEach(s => {
+    const stageLeads = all.filter(l => l.stage === s.id);
+    const col = document.createElement('div');
+    col.className = `kanban-col ${s.col}`;
+    col.innerHTML = `
+      <div class="col-header">
+        <span class="col-title">${s.label}</span>
+        <span class="col-count">${stageLeads.length}</span>
+      </div>
+      <div class="col-cards" id="cards-${s.id}"></div>
+    `;
+    board.appendChild(col);
+
+    const cardsEl = col.querySelector('.col-cards');
+    stageLeads.forEach(lead => {
+      cardsEl.appendChild(buildCard(lead));
+    });
+  });
+}
+
+function buildNotesHtml(lead) {
+  const notes = lead.notes || [];
+  if (notes.length === 0) {
+    return `<div class="card-notes">
+      <div class="note-input-row">
+        <input class="note-input" id="ni-${lead.id}" placeholder="📝 Registrar ligação ou obs..." onkeydown="if(event.key==='Enter')addNote('${lead.id}')" />
+        <button class="btn-note-add" onclick="addNote('${lead.id}')">+ Obs</button>
+      </div>
+    </div>`;
+  }
+  const last2 = notes.slice(-2);
+  const hasMore = notes.length > 2;
+  const notesHtml = last2.map(n => `
+    <div class="note-item">
+      ${n.text}
+      <div class="note-meta">🕐 ${new Date(n.at).toLocaleString('pt-BR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</div>
+    </div>`).join('');
+  return `<div class="card-notes">
+    ${hasMore ? `<button class="notes-toggle" onclick="openModal('${lead.id}')">📋 Ver todas (${notes.length} anotações)</button>` : ''}
+    ${notesHtml}
+    <div class="note-input-row">
+      <input class="note-input" id="ni-${lead.id}" placeholder="📝 Nova obs..." onkeydown="if(event.key==='Enter')addNote('${lead.id}')" />
+      <button class="btn-note-add" onclick="addNote('${lead.id}')">+ Obs</button>
+    </div>
+  </div>`;
+}
+
+async function addNote(id) {
+  const input = document.getElementById('ni-' + id);
+  if (!input) return;
+  const text = input.value.trim();
+  if (!text) return;
+  const lead = leads.find(l => l.id === id);
+  if (!lead) return;
+  const notes = [...(lead.notes || []), { text, at: Date.now() }];
+  try {
+    await updateDoc(doc(db, 'leads', id), { notes });
+    showToast('📝 Anotação salva!');
+  } catch(e) {
+    showToast('❌ Erro ao salvar anotação.', '#e53935');
+  }
+}
+
+function buildCard(lead) {
+  const div = document.createElement('div');
+  const ageMin = (Date.now() - lead.createdAt) / 60000;
+  const isNew = lead.stage === 'novo' && ageMin < 30;
+  const isUrgent = lead.stage === 'novo' && ageMin >= 15 && ageMin < 60;
+  div.className = `lead-card${isNew && ageMin < 60 ? ' new-lead' : ''}`;
+
+  const phoneRaw = lead.contato.replace(/\D/g, '');
+  const stageIdx = STAGES.findIndex(s => s.id === lead.stage);
+  const nextStage = stageIdx < STAGES.length - 2 ? STAGES[stageIdx + 1] : null;
+
+  div.innerHTML = `
+    <div class="lead-name">👤 ${lead.nome}</div>
+    <div class="lead-meta">
+      <span>📱 ${lead.contato}</span>
+      <span>🚘 ${lead.placa}</span>
+    </div>
+    <div>
+      <span class="badge-seguro ${lead.seguro}">${lead.seguro === 'sim' ? '🛡️ Tem seguro' : '❌ Sem seguro'}</span>
+    </div>
+    ${buildNotesHtml(lead)}
+    <div class="time-badge ${isUrgent ? 'urgent' : ''}">
+      ${isUrgent ? '⏰' : '🕐'} ${timeAgo(lead.createdAt)}
+    </div>
+    <div class="card-actions">
+      <button class="btn-wa" onclick="openWA('${phoneRaw}', '${lead.nome}', '${lead.placa}')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        WhatsApp
+      </button>
+      ${nextStage ? `<button class="btn-move" onclick="moveStage('${lead.id}', '${nextStage.id}')">→ ${nextStage.label.split(' ')[0]}</button>` : ''}
+      ${lead.stage !== 'perdido' ? `<button class="btn-perdido" onclick="moveStage('${lead.id}', 'perdido')" title="Marcar como perdido">✗</button>` : ''}
+    </div>
+  `;
+  div.querySelector('.lead-name').addEventListener('click', () => openModal(lead.id));
+  return div;
+}
+
+function openWA(phone, nome, placa) {
+  const msg = encodeURIComponent(`Olá ${nome}! Aqui é da Fernandes Fortis Seguros. Vi que seu veículo de placa ${placa} ainda não possui cobertura. Posso te apresentar as melhores opções do mercado hoje?`);
+  window.open(`https://wa.me/55${phone}?text=${msg}`, '_blank');
+}
+
+async function moveStage(id, newStage) {
+  const lead = leads.find(l => l.id === id);
+  if (!lead) return;
+  const history = [...(lead.history || []), { stage: newStage, at: Date.now() }];
+  try {
+    await updateDoc(doc(db, 'leads', id), { stage: newStage, history });
+    const s = STAGES.find(s => s.id === newStage);
+    showToast(`✅ Movido para: ${s.label}`);
+  } catch(e) {
+    showToast('❌ Erro ao atualizar.', '#e53935');
+  }
+}
+
+// ===== MODAL =====
+function openModal(id) {
+  const lead = leads.find(l => l.id === id);
+  if (!lead) return;
+  const s = STAGES.find(s => s.id === lead.stage);
+  const stagesHtml = STAGES
+    .filter(st => st.id !== lead.stage)
+    .map(st => `<button class="stage-btn${st.id===lead.stage?' current':''}" onclick="moveStage('${lead.id}','${st.id}'); closeModal(); renderKanban()">${st.label}</button>`)
+    .join('');
+
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-field"><label>Nome</label><p>${lead.nome}</p></div>
+    <div class="modal-field"><label>Contato</label><p>${lead.contato}</p></div>
+    <div class="modal-field"><label>Placa</label><p>${lead.placa}</p></div>
+    <div class="modal-field"><label>Seguro atual</label><p>${lead.seguro === 'sim' ? '🛡️ Tem seguro' : '❌ Sem seguro'}</p></div>
+    <div class="modal-field"><label>Estágio atual</label><p>${s.label}</p></div>
+    <div class="modal-field"><label>Captado em</label><p>${new Date(lead.createdAt).toLocaleString('pt-BR')}</p></div>
+    <div class="modal-field">
+      <label>📋 Histórico de anotações (${(lead.notes||[]).length})</label>
+      <div style="max-height:200px;overflow-y:auto;margin-top:6px">
+        ${(lead.notes||[]).length === 0 ? '<p style="color:var(--gray-500);font-size:.82rem">Nenhuma anotação ainda.</p>' :
+          [...(lead.notes||[])].reverse().map(n => `
+            <div class="note-item">
+              ${n.text}
+              <div class="note-meta">🕐 ${new Date(n.at).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</div>
+            </div>`).join('')}
+      </div>
+      <div class="note-input-row" style="margin-top:8px">
+        <input class="note-input" id="modalNoteInput" placeholder="Nova anotação..." onkeydown="if(event.key==='Enter')addNoteFromModal('${lead.id}')" />
+        <button class="btn-note-add" onclick="addNoteFromModal('${lead.id}')">+ Obs</button>
+      </div>
+    </div>
+    <div style="margin-top:16px">
+      <label style="font-size:.8rem;font-weight:600;color:var(--gray-500)">Mover para estágio</label>
+      <div class="modal-stages">${stagesHtml}</div>
+    </div>
+    <div style="margin-top:16px">
+      <button class="btn-wa" style="width:100%" onclick="openWA('${lead.contato.replace(/\D/g,'')}', '${lead.nome}', '${lead.placa}')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Abrir WhatsApp
+      </button>
+    </div>
+  `;
+  document.getElementById('modalOverlay').style.display = 'flex';
+}
+
+async function addNoteFromModal(id) {
+  const input = document.getElementById('modalNoteInput');
+  if (!input) return;
+  const text = input.value.trim();
+  if (!text) return;
+  const lead = leads.find(l => l.id === id);
+  if (!lead) return;
+  const notes = [...(lead.notes || []), { text, at: Date.now() }];
+  try {
+    await updateDoc(doc(db, 'leads', id), { notes });
+    showToast('📝 Anotação salva!');
+    openModal(id);
+  } catch(e) {
+    showToast('❌ Erro ao salvar anotação.', '#e53935');
+  }
+}
+
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modalOverlay')) {
+    document.getElementById('modalOverlay').style.display = 'none';
+    renderKanban();
+  }
+}
+
+// ===== EXPOR FUNÇÕES AO ESCOPO GLOBAL (módulo ES) =====
+window.login         = login;
+window.logout        = logout;
+window.salvarLead    = salvarLead;
+window.selectSeguro  = selectSeguro;
+window.formatPhone   = formatPhone;
+window.formatPlaca   = formatPlaca;
+window.moveStage     = moveStage;
+window.openWA        = openWA;
+window.openModal     = openModal;
+window.closeModal    = closeModal;
+window.addNote       = addNote;
+window.addNoteFromModal = addNoteFromModal;
+</script>
+</body>
+</html>
