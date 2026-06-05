@@ -624,7 +624,7 @@
     <div class="login-subtitle">CRM de Capta√ß√£o ¬∑ Selecione seu perfil</div>
     <!-- Consultor -->
     <div class="role-btn" onclick="togglePw('sdr', event)">
-      <span class="icon">üöó</span>
+      <span class="icon"></span>
       <div style="flex:1">
         <div class="label">Consultor de Relacionamento</div>
         <div class="desc">Capta√ß√£o de leads em campo</div>
@@ -638,7 +638,7 @@
 
     <!-- Analista -->
     <div class="role-btn" onclick="togglePw('vendedor', event)">
-      <span class="icon">üíº</span>
+      <span class="icon"></span>
       <div style="flex:1">
         <div class="label">Analista Comercial</div>
         <div class="desc">Atendimento, Kanban e follow-up</div>
@@ -652,7 +652,7 @@
 
     <!-- Gestor -->
     <div class="role-btn" onclick="togglePw('gestor', event)">
-      <span class="icon">üìä</span>
+      <span class="icon"></span>
       <div style="flex:1">
         <div class="label">Gestor</div>
         <div class="desc">Vis√£o completa do pipeline</div>
@@ -668,7 +668,7 @@
 
 <!-- ===================== NAV ===================== -->
 <nav class="topnav" id="topNav" style="display:none">
-  <div class="topnav-brand">‚ö° Fernandes Fortis</div>
+  <div class="topnav-brand">Fernandes Fortis</div>
   <div style="display:flex;align-items:center;gap:10px">
     <span class="topnav-role" id="navRole"></span>
     <button class="logout-btn" onclick="logout()">Sair</button>
@@ -679,7 +679,7 @@
 <div id="sdrScreen" style="display:none">
   <div class="sdr-screen">
     <div class="sdr-header">
-      <h1>üìç Capta√ß√£o de Lead</h1>
+      <h1>Capta√ß√£o de Lead</h1>
       <p>Novo Prospecto</p>
     </div>
 
@@ -692,28 +692,28 @@
 
     <div class="form-card">
       <div class="form-group">
-        <label>üë§ Nome completo</label>
+        <label>Nome completo</label>
         <input class="form-control" id="fNome" type="text" placeholder="Ex: Jo√£o da Silva" />
       </div>
       <div class="form-group">
-        <label>üì± Contato (WhatsApp)</label>
+        <label>Contato (WhatsApp)</label>
         <input class="form-control" id="fContato" type="tel" placeholder="(00) 00000-0000"
           oninput="formatPhone(this)" maxlength="15" />
       </div>
       <div class="form-group">
-        <label>üöò Placa do ve√≠culo</label>
+        <label>Placa do ve√≠culo</label>
         <input class="form-control" id="fPlaca" type="text" placeholder="Ex: ABC-1234"
           oninput="formatPlaca(this)" maxlength="8" style="text-transform:uppercase" />
       </div>
       <div class="form-group">
-        <label>üõ°Ô∏è Tem seguro no momento?</label>
+        <label>Tem seguro no momento?</label>
         <div class="radio-group">
-          <button class="radio-btn sim" id="btnSim" onclick="selectSeguro('sim')">‚úÖ Sim</button>
-          <button class="radio-btn nao" id="btnNao" onclick="selectSeguro('nao')">‚ùå N√£o</button>
+          <button class="radio-btn sim" id="btnSim" onclick="selectSeguro('sim')">Sim</button>
+          <button class="radio-btn nao" id="btnNao" onclick="selectSeguro('nao')">N√£o</button>
         </div>
       </div>
       <button class="btn-primary" id="btnSalvar" onclick="salvarLead()">
-        ‚ûï Cadastrar Lead
+        Cadastrar Lead
       </button>
     </div>
   </div>
@@ -723,9 +723,9 @@
 <div id="kanbanScreen" style="display:none">
   <div class="kanban-screen">
     <div class="kanban-top">
-      <div class="kanban-title">üìã Pipeline de Leads</div>
+      <div class="kanban-title">Pipeline de Leads</div>
       <div id="newLeadAlert" class="new-lead-alert" style="display:none">
-        üîî <span id="newLeadAlertText"></span>
+        <span id="newLeadAlertText"></span>
       </div>
     </div>
 
@@ -739,7 +739,7 @@
 <div class="modal-overlay" id="modalOverlay" style="display:none" onclick="closeModal(event)">
   <div class="modal" onclick="event.stopPropagation()">
     <button class="modal-close" onclick="closeModal()">‚úï</button>
-    <h3>üìÑ Detalhes do Lead</h3>
+    <h3>Detalhes do Lead</h3>
     <div id="modalContent"></div>
   </div>
 </div>
@@ -878,7 +878,7 @@ function login(role) {
   currentRole = role;
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('topNav').style.display = 'flex';
-  const labels = { sdr: 'üöó Consultor de Relacionamento', vendedor: 'üíº Analista Comercial', gestor: 'üìä Gestor' };
+  const labels = { sdr: 'Consultor de Relacionamento', vendedor: 'Analista Comercial', gestor: 'Gestor' };
   document.getElementById('navRole').textContent = labels[role];
 
   // Listener em tempo real do Firestore
@@ -924,10 +924,10 @@ async function salvarLead() {
   const contato = document.getElementById('fContato').value.trim();
   const placa   = document.getElementById('fPlaca').value.trim();
 
-  if (!nome)    { showToast('‚ö†Ô∏è Informe o nome', '#f57c00'); return; }
-  if (!contato) { showToast('‚ö†Ô∏è Informe o contato', '#f57c00'); return; }
-  if (!placa)   { showToast('‚ö†Ô∏è Informe a placa', '#f57c00'); return; }
-  if (!selectedSeguro) { showToast('‚ö†Ô∏è Selecione se tem seguro', '#f57c00'); return; }
+  if (!nome)    { showToast('Informe o nome', '#f57c00'); return; }
+  if (!contato) { showToast('Informe o contato', '#f57c00'); return; }
+  if (!placa)   { showToast('Informe a placa', '#f57c00'); return; }
+  if (!selectedSeguro) { showToast('Selecione se tem seguro', '#f57c00'); return; }
 
   const btnSalvar = document.getElementById('btnSalvar');
   btnSalvar.disabled = true;
@@ -951,12 +951,12 @@ async function salvarLead() {
     document.getElementById('btnSim').classList.remove('active');
     document.getElementById('btnNao').classList.remove('active');
     selectedSeguro = null;
-    showToast('‚úÖ Lead cadastrado com sucesso!');
+    showToast('Lead cadastrado com sucesso!');
   } catch(e) {
-    showToast('‚ùå Erro ao salvar. Verifique a conex√£o.', '#e53935');
+    showToast('Erro ao salvar. Verifique a conex√£o.', '#e53935');
   } finally {
     btnSalvar.disabled = false;
-    btnSalvar.textContent = '‚ûï Cadastrar Lead';
+    btnSalvar.textContent = 'Cadastrar Lead';
   }
 }
 
@@ -1030,7 +1030,7 @@ function buildNotesHtml(lead) {
   if (notes.length === 0) {
     return `<div class="card-notes">
       <div class="note-input-row">
-        <input class="note-input" id="ni-${lead.id}" placeholder="üìù Registrar liga√ß√£o ou obs..." onkeydown="if(event.key==='Enter')addNote('${lead.id}')" />
+        <input class="note-input" id="ni-${lead.id}" placeholder="Registrar liga√ß√£o ou obs..." onkeydown="if(event.key==='Enter')addNote('${lead.id}')" />
         <button class="btn-note-add" onclick="addNote('${lead.id}')">+ Obs</button>
       </div>
     </div>`;
@@ -1040,13 +1040,13 @@ function buildNotesHtml(lead) {
   const notesHtml = last2.map(n => `
     <div class="note-item">
       ${n.text}
-      <div class="note-meta">üïê ${new Date(n.at).toLocaleString('pt-BR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</div>
+      <div class="note-meta">${new Date(n.at).toLocaleString('pt-BR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</div>
     </div>`).join('');
   return `<div class="card-notes">
-    ${hasMore ? `<button class="notes-toggle" onclick="openModal('${lead.id}')">üìã Ver todas (${notes.length} anota√ß√µes)</button>` : ''}
+    ${hasMore ? `<button class="notes-toggle" onclick="openModal('${lead.id}')">Ver todas (${notes.length} anota√ß√µes)</button>` : ''}
     ${notesHtml}
     <div class="note-input-row">
-      <input class="note-input" id="ni-${lead.id}" placeholder="üìù Nova obs..." onkeydown="if(event.key==='Enter')addNote('${lead.id}')" />
+      <input class="note-input" id="ni-${lead.id}" placeholder="Nova obs..." onkeydown="if(event.key==='Enter')addNote('${lead.id}')" />
       <button class="btn-note-add" onclick="addNote('${lead.id}')">+ Obs</button>
     </div>
   </div>`;
@@ -1062,9 +1062,9 @@ async function addNote(id) {
   const notes = [...(lead.notes || []), { text, at: Date.now() }];
   try {
     await updateDoc(doc(db, 'leads', id), { notes });
-    showToast('üìù Anota√ß√£o salva!');
+    showToast('Anota√ß√£o salva!');
   } catch(e) {
-    showToast('‚ùå Erro ao salvar anota√ß√£o.', '#e53935');
+    showToast('Erro ao salvar anota√ß√£o.', '#e53935');
   }
 }
 
@@ -1080,17 +1080,17 @@ function buildCard(lead) {
   const nextStage = stageIdx < STAGES.length - 2 ? STAGES[stageIdx + 1] : null;
 
   div.innerHTML = `
-    <div class="lead-name">üë§ ${lead.nome}</div>
+    <div class="lead-name">${lead.nome}</div>
     <div class="lead-meta">
-      <span>üì± ${lead.contato}</span>
-      <span>üöò ${lead.placa}</span>
+      <span>${lead.contato}</span>
+      <span>${lead.placa}</span>
     </div>
     <div>
-      <span class="badge-seguro ${lead.seguro}">${lead.seguro === 'sim' ? 'üõ°Ô∏è Tem seguro' : '‚ùå Sem seguro'}</span>
+      <span class="badge-seguro ${lead.seguro}">${lead.seguro === 'sim' ? 'Tem seguro' : 'Sem seguro'}</span>
     </div>
     ${buildNotesHtml(lead)}
     <div class="time-badge ${isUrgent ? 'urgent' : ''}">
-      ${isUrgent ? '‚è∞' : 'üïê'} ${timeAgo(lead.createdAt)}
+      ${isUrgent ? '!' : ''} ${timeAgo(lead.createdAt)}
     </div>
     <div class="card-actions">
       <button class="btn-wa" onclick="openWA('${phoneRaw}', '${lead.nome}', '${lead.placa}')">
@@ -1117,9 +1117,9 @@ async function moveStage(id, newStage) {
   try {
     await updateDoc(doc(db, 'leads', id), { stage: newStage, history });
     const s = STAGES.find(s => s.id === newStage);
-    showToast(`‚úÖ Movido para: ${s.label}`);
+    showToast(`Movido para: ${s.label}`);
   } catch(e) {
-    showToast('‚ùå Erro ao atualizar.', '#e53935');
+    showToast('Erro ao atualizar.', '#e53935');
   }
 }
 
@@ -1137,17 +1137,17 @@ function openModal(id) {
     <div class="modal-field"><label>Nome</label><p>${lead.nome}</p></div>
     <div class="modal-field"><label>Contato</label><p>${lead.contato}</p></div>
     <div class="modal-field"><label>Placa</label><p>${lead.placa}</p></div>
-    <div class="modal-field"><label>Seguro atual</label><p>${lead.seguro === 'sim' ? 'üõ°Ô∏è Tem seguro' : '‚ùå Sem seguro'}</p></div>
+    <div class="modal-field"><label>Seguro atual</label><p>${lead.seguro === 'sim' ? 'Tem seguro' : 'Sem seguro'}</p></div>
     <div class="modal-field"><label>Est√°gio atual</label><p>${s.label}</p></div>
     <div class="modal-field"><label>Captado em</label><p>${new Date(lead.createdAt).toLocaleString('pt-BR')}</p></div>
     <div class="modal-field">
-      <label>üìã Hist√≥rico de anota√ß√µes (${(lead.notes||[]).length})</label>
+      <label>Hist√≥rico de anota√ß√µes (${(lead.notes||[]).length})</label>
       <div style="max-height:200px;overflow-y:auto;margin-top:6px">
         ${(lead.notes||[]).length === 0 ? '<p style="color:var(--gray-500);font-size:.82rem">Nenhuma anota√ß√£o ainda.</p>' :
           [...(lead.notes||[])].reverse().map(n => `
             <div class="note-item">
               ${n.text}
-              <div class="note-meta">üïê ${new Date(n.at).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</div>
+              <div class="note-meta">${new Date(n.at).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</div>
             </div>`).join('')}
       </div>
       <div class="note-input-row" style="margin-top:8px">
@@ -1179,10 +1179,10 @@ async function addNoteFromModal(id) {
   const notes = [...(lead.notes || []), { text, at: Date.now() }];
   try {
     await updateDoc(doc(db, 'leads', id), { notes });
-    showToast('üìù Anota√ß√£o salva!');
+    showToast('Anota√ß√£o salva!');
     openModal(id);
   } catch(e) {
-    showToast('‚ùå Erro ao salvar anota√ß√£o.', '#e53935');
+    showToast('Erro ao salvar anota√ß√£o.', '#e53935');
   }
 }
 
