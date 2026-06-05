@@ -1102,7 +1102,7 @@ function buildCard(lead) {
 }
 
 function openWA(phone, nome, placa) {
-  const msg = encodeURIComponent(`Ol&aacute; ${nome}! Aqui &eacute; da Fernandes Fortis Seguros. Vi que seu ve&iacute;culo de placa ${placa} ainda n&atilde;o possui cobertura. Posso te apresentar as melhores op&ccedil;&otilde;es do mercado hoje?`);
+  const msg = encodeURIComponent(`Oi, ${nome}! Aqui \u00e9 a equipe Fernandes Fortis. J\u00e1 levantei a base do seu carro e ficou uma condi\u00e7\u00e3o interessante. Posso te mandar a simula\u00e7\u00e3o?`);
   window.open(`https://wa.me/55${phone}?text=${msg}`, '_blank');
 }
 
