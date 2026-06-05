@@ -626,7 +626,7 @@
     <div class="role-btn" onclick="togglePw('sdr', event)">
       <span class="icon"></span>
       <div style="flex:1">
-        <div class="label">Consultor de Relacionamento</div>
+        <div class="label">&#128663; Consultor de Relacionamento</div>
         <div class="desc">Capta&ccedil;&atilde;o de leads em campo</div>
         <div class="pw-box" id="pw-sdr">
           <input class="pw-input" id="pwi-sdr" type="password" placeholder="Digite a senha..." onkeydown="if(event.key==='Enter')tentarLogin('sdr')" onclick="event.stopPropagation()" />
@@ -640,7 +640,7 @@
     <div class="role-btn" onclick="togglePw('vendedor', event)">
       <span class="icon"></span>
       <div style="flex:1">
-        <div class="label">Analista Comercial</div>
+        <div class="label">&#128188; Analista Comercial</div>
         <div class="desc">Atendimento, Kanban e follow-up</div>
         <div class="pw-box" id="pw-vendedor">
           <input class="pw-input" id="pwi-vendedor" type="password" placeholder="Digite a senha..." onkeydown="if(event.key==='Enter')tentarLogin('vendedor')" onclick="event.stopPropagation()" />
@@ -654,7 +654,7 @@
     <div class="role-btn" onclick="togglePw('gestor', event)">
       <span class="icon"></span>
       <div style="flex:1">
-        <div class="label">Gestor</div>
+        <div class="label">&#128202; Gestor</div>
         <div class="desc">Vis&atilde;o completa do pipeline</div>
         <div class="pw-box" id="pw-gestor">
           <input class="pw-input" id="pwi-gestor" type="password" placeholder="Digite a senha..." onkeydown="if(event.key==='Enter')tentarLogin('gestor')" onclick="event.stopPropagation()" />
@@ -668,7 +668,7 @@
 
 <!-- ===================== NAV ===================== -->
 <nav class="topnav" id="topNav" style="display:none">
-  <div class="topnav-brand">Fernandes Fortis</div>
+  <div class="topnav-brand">&#9889; Fernandes Fortis</div>
   <div style="display:flex;align-items:center;gap:10px">
     <span class="topnav-role" id="navRole"></span>
     <button class="logout-btn" onclick="logout()">Sair</button>
@@ -679,7 +679,7 @@
 <div id="sdrScreen" style="display:none">
   <div class="sdr-screen">
     <div class="sdr-header">
-      <h1>Capta&ccedil;&atilde;o de Lead</h1>
+      <h1>&#128205; Capta&ccedil;&atilde;o de Lead</h1>
       <p>Novo Prospecto</p>
     </div>
 
@@ -692,24 +692,24 @@
 
     <div class="form-card">
       <div class="form-group">
-        <label>Nome completo</label>
+        <label>&#128100; Nome completo</label>
         <input class="form-control" id="fNome" type="text" placeholder="Ex: Jo&atilde;o da Silva" />
       </div>
       <div class="form-group">
-        <label>Contato (WhatsApp)</label>
+        <label>&#128241; Contato (WhatsApp)</label>
         <input class="form-control" id="fContato" type="tel" placeholder="(00) 00000-0000"
           oninput="formatPhone(this)" maxlength="15" />
       </div>
       <div class="form-group">
-        <label>Placa do ve&iacute;culo</label>
+        <label>&#128664; Placa do ve&iacute;culo</label>
         <input class="form-control" id="fPlaca" type="text" placeholder="Ex: ABC-1234"
           oninput="formatPlaca(this)" maxlength="8" style="text-transform:uppercase" />
       </div>
       <div class="form-group">
-        <label>Tem seguro no momento?</label>
+        <label>&#128737; Tem seguro no momento?</label>
         <div class="radio-group">
-          <button class="radio-btn sim" id="btnSim" onclick="selectSeguro('sim')">Sim</button>
-          <button class="radio-btn nao" id="btnNao" onclick="selectSeguro('nao')">N&atilde;o</button>
+          <button class="radio-btn sim" id="btnSim" onclick="selectSeguro('sim')">&#9989; Sim</button>
+          <button class="radio-btn nao" id="btnNao" onclick="selectSeguro('nao')">&#10060; N&atilde;o</button>
         </div>
       </div>
       <button class="btn-primary" id="btnSalvar" onclick="salvarLead()">
@@ -723,7 +723,7 @@
 <div id="kanbanScreen" style="display:none">
   <div class="kanban-screen">
     <div class="kanban-top">
-      <div class="kanban-title">Pipeline de Leads</div>
+      <div class="kanban-title">&#128203; Pipeline de Leads</div>
       <div id="newLeadAlert" class="new-lead-alert" style="display:none">
         <span id="newLeadAlertText"></span>
       </div>
@@ -739,7 +739,7 @@
 <div class="modal-overlay" id="modalOverlay" style="display:none" onclick="closeModal(event)">
   <div class="modal" onclick="event.stopPropagation()">
     <button class="modal-close" onclick="closeModal()">‚úï</button>
-    <h3>Detalhes do Lead</h3>
+    <h3>&#128196; Detalhes do Lead</h3>
     <div id="modalContent"></div>
   </div>
 </div>
@@ -1030,7 +1030,7 @@ function buildNotesHtml(lead) {
   if (notes.length === 0) {
     return `<div class="card-notes">
       <div class="note-input-row">
-        <input class="note-input" id="ni-${lead.id}" placeholder="Registrar liga&ccedil;&atilde;o ou obs..." onkeydown="if(event.key==='Enter')addNote('${lead.id}')" />
+        <input class="note-input" id="ni-${lead.id}" placeholder="&#128221; Registrar liga&ccedil;&atilde;o ou obs..." onkeydown="if(event.key==='Enter')addNote('${lead.id}')" />
         <button class="btn-note-add" onclick="addNote('${lead.id}')">+ Obs</button>
       </div>
     </div>`;
@@ -1046,7 +1046,7 @@ function buildNotesHtml(lead) {
     ${hasMore ? `<button class="notes-toggle" onclick="openModal('${lead.id}')">Ver todas (${notes.length} anota&ccedil;&otilde;es)</button>` : ''}
     ${notesHtml}
     <div class="note-input-row">
-      <input class="note-input" id="ni-${lead.id}" placeholder="Nova obs..." onkeydown="if(event.key==='Enter')addNote('${lead.id}')" />
+      <input class="note-input" id="ni-${lead.id}" placeholder="&#128221; Nova obs..." onkeydown="if(event.key==='Enter')addNote('${lead.id}')" />
       <button class="btn-note-add" onclick="addNote('${lead.id}')">+ Obs</button>
     </div>
   </div>`;
@@ -1086,7 +1086,7 @@ function buildCard(lead) {
       <span>${lead.placa}</span>
     </div>
     <div>
-      <span class="badge-seguro ${lead.seguro}">${lead.seguro === 'sim' ? 'Tem seguro' : 'Sem seguro'}</span>
+      <span class="badge-seguro ${lead.seguro}">${lead.seguro === 'sim' ? '&#128737;&#65039; Tem seguro' : '&#10060; Sem seguro'}</span>
     </div>
     ${buildNotesHtml(lead)}
     <div class="time-badge ${isUrgent ? 'urgent' : ''}">
@@ -1137,11 +1137,11 @@ function openModal(id) {
     <div class="modal-field"><label>Nome</label><p>${lead.nome}</p></div>
     <div class="modal-field"><label>Contato</label><p>${lead.contato}</p></div>
     <div class="modal-field"><label>Placa</label><p>${lead.placa}</p></div>
-    <div class="modal-field"><label>Seguro atual</label><p>${lead.seguro === 'sim' ? 'Tem seguro' : 'Sem seguro'}</p></div>
+    <div class="modal-field"><label>Seguro atual</label><p>${lead.seguro === 'sim' ? '&#128737;&#65039; Tem seguro' : '&#10060; Sem seguro'}</p></div>
     <div class="modal-field"><label>Est&aacute;gio atual</label><p>${s.label}</p></div>
     <div class="modal-field"><label>Captado em</label><p>${new Date(lead.createdAt).toLocaleString('pt-BR')}</p></div>
     <div class="modal-field">
-      <label>Hist&oacute;rico de anota&ccedil;&otilde;es (${(lead.notes||[]).length})</label>
+      <label>&#128203; Hist&oacute;rico de anota&ccedil;&otilde;es (${(lead.notes||[]).length})</label>
       <div style="max-height:200px;overflow-y:auto;margin-top:6px">
         ${(lead.notes||[]).length === 0 ? '<p style="color:var(--gray-500);font-size:.82rem">Nenhuma anota&ccedil;&atilde;o ainda.</p>' :
           [...(lead.notes||[])].reverse().map(n => `
