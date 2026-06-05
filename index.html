@@ -604,6 +604,78 @@
       50% { box-shadow: 0 0 0 8px rgba(21,101,192,0); }
     }
 
+    /* ===== HISTORICO DIARIO ===== */
+    .historico-section {
+      margin: 28px 0 20px 0;
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .historico-header {
+      background: var(--primary);
+      color: var(--white);
+      padding: 14px 20px;
+      font-weight: 800;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .historico-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .historico-table th {
+      background: #e8eaf6;
+      color: var(--primary);
+      font-size: .82rem;
+      font-weight: 700;
+      padding: 10px 16px;
+      text-align: left;
+      border-bottom: 2px solid var(--gray-200);
+    }
+    .historico-table td {
+      padding: 10px 16px;
+      font-size: .88rem;
+      border-bottom: 1px solid var(--gray-200);
+      vertical-align: middle;
+    }
+    .historico-table tr:last-child td { border-bottom: none; }
+    .historico-table tr:hover td { background: #f5f5f5; }
+    .historico-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .historico-bar-fill {
+      height: 10px;
+      border-radius: 5px;
+      background: var(--primary);
+      transition: width .3s;
+    }
+    .historico-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--primary);
+      color: var(--white);
+      border-radius: 20px;
+      padding: 2px 10px;
+      font-size: .78rem;
+      font-weight: 800;
+      min-width: 28px;
+    }
+    .hoje-tag {
+      background: #e8f5e9;
+      color: #1b5e20;
+      font-size: .72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 10px;
+      margin-left: 6px;
+    }
+
     /* Scrollbar kanban */
     .kanban-board::-webkit-scrollbar { height: 6px; }
     .kanban-board::-webkit-scrollbar-track { background: var(--gray-200); border-radius: 3px; }
@@ -724,6 +796,9 @@
   <div class="kanban-screen">
     <div class="kanban-top">
       <div class="kanban-title">&#128203; Pipeline de Leads</div>
+      <button onclick="exportarCSV()" style="background:#1b5e20;color:white;border:none;border-radius:8px;padding:8px 16px;font-weight:700;font-size:.85rem;cursor:pointer;display:flex;align-items:center;gap:6px;">
+        &#128196; Exportar CSV
+      </button>
       <div id="newLeadAlert" class="new-lead-alert" style="display:none">
         <span id="newLeadAlertText"></span>
       </div>
@@ -732,6 +807,25 @@
     <div class="stats-row" id="statsRow"></div>
 
     <div class="kanban-board" id="kanbanBoard"></div>
+
+    <!-- HISTORICO DIARIO - s√≥ aparece para o gestor -->
+    <div class="historico-section" id="historicoSection" style="display:none">
+      <div class="historico-header">
+        &#128197; Hist&oacute;rico de Capta&ccedil;&atilde;o por Dia
+      </div>
+      <table class="historico-table">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Leads Captados</th>
+            <th>Volume</th>
+            <th>Vendas</th>
+            <th>Convers&atilde;o</th>
+          </tr>
+        </thead>
+        <tbody id="historicoBody"></tbody>
+      </table>
+    </div>
   </div>
 </div>
 
@@ -999,6 +1093,7 @@ function renderKanban() {
   statsRow.innerHTML = statsHtml;
 
   // Board
+  renderHistorico();
   const board = document.getElementById('kanbanBoard');
   board.innerHTML = '';
   STAGES.forEach(s => {
@@ -1189,7 +1284,87 @@ function closeModal(e) {
   }
 }
 
+// ===== EXPORTAR CSV =====
+function exportarCSV() {
+  const headers = ['Nome','Contato','Placa','Seguro','Etapa','Captado em','Observacoes'];
+  const stageLabels = {
+    novo:'NOVO LEAD', contato:'CONTATO REALIZADO', negoc:'NEGOCIACAO',
+    aguard:'AGUARDANDO DOC/PAGAMENTO', venda:'VENDA', perdido:'LEAD PERDIDO'
+  };
+  const rows = leads.map(l => {
+    const ts = l.createdAt?.toMillis ? l.createdAt.toMillis() : l.createdAt;
+    const notes = (l.notes||[]).map(n=>n.text).join(' | ');
+    return [
+      l.nome,
+      l.contato,
+      l.placa,
+      l.seguro === 'sim' ? 'Tem seguro' : 'Sem seguro',
+      stageLabels[l.stage] || l.stage,
+      new Date(ts).toLocaleString('pt-BR'),
+      notes
+    ].map(v => `"${String(v||'').replace(/"/g,'""')}"`).join(',');
+  });
+  const csv = [headers.join(','), ...rows].join('\n');
+  const blob = new Blob(['\uFEFF' + csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'leads-fernandes-fortis-' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Arquivo CSV baixado!');
+}
+
+// ===== HISTORICO DIARIO =====
+function renderHistorico() {
+  if (currentRole !== 'gestor') return;
+  document.getElementById('historicoSection').style.display = 'block';
+
+  // Agrupar leads por dia
+  const porDia = {};
+  leads.forEach(l => {
+    const ts = l.createdAt?.toMillis ? l.createdAt.toMillis() : l.createdAt;
+    const dia = new Date(ts).toLocaleDateString('pt-BR');
+    if (!porDia[dia]) porDia[dia] = { total: 0, vendas: 0, ts };
+    porDia[dia].total++;
+    if (l.stage === 'venda') porDia[dia].vendas++;
+    if (ts > porDia[dia].ts) porDia[dia].ts = ts;
+  });
+
+  // Ordenar por data mais recente
+  const dias = Object.keys(porDia).sort((a, b) => porDia[b].ts - porDia[a].ts);
+  const maxTotal = Math.max(...dias.map(d => porDia[d].total), 1);
+  const hoje = new Date().toLocaleDateString('pt-BR');
+
+  const tbody = document.getElementById('historicoBody');
+  if (!dias.length) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--gray-500);padding:24px">Nenhum lead captado ainda.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = dias.map(dia => {
+    const d = porDia[dia];
+    const conv = d.total > 0 ? Math.round((d.vendas / d.total) * 100) : 0;
+    const barW = Math.round((d.total / maxTotal) * 120);
+    const isHoje = dia === hoje;
+    return `<tr>
+      <td><b>${dia}</b>${isHoje ? '<span class="hoje-tag">hoje</span>' : ''}</td>
+      <td><span class="historico-badge">${d.total}</span></td>
+      <td>
+        <div class="historico-bar">
+          <div class="historico-bar-fill" style="width:${barW}px"></div>
+          <span style="font-size:.75rem;color:var(--gray-500)">${d.total} lead${d.total>1?'s':''}</span>
+        </div>
+      </td>
+      <td style="color:#1b5e20;font-weight:700">${d.vendas}</td>
+      <td style="color:${conv>=20?'#1b5e20':conv>=10?'#e65100':'#e53935'};font-weight:700">${conv}%</td>
+    </tr>`;
+  }).join('');
+}
+
 // ===== EXPOR FUN&Ccedil;&Otilde;ES AO ESCOPO GLOBAL (m&oacute;dulo ES) =====
+window.exportarCSV   = exportarCSV;
+window.renderHistorico = renderHistorico;
 window.togglePw      = togglePw;
 window.tentarLogin   = tentarLogin;
 window.login         = login;
