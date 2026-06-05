@@ -621,13 +621,13 @@
 <div id="loginScreen" class="login-screen">
   <div class="login-card">
     <div class="login-logo">Fernandes Fortis</div>
-    <div class="login-subtitle">CRM de Capta√ß√£o ¬∑ Selecione seu perfil</div>
+    <div class="login-subtitle">CRM de Capta&ccedil;&atilde;o &middot; Selecione seu perfil</div>
     <!-- Consultor -->
     <div class="role-btn" onclick="togglePw('sdr', event)">
       <span class="icon"></span>
       <div style="flex:1">
         <div class="label">Consultor de Relacionamento</div>
-        <div class="desc">Capta√ß√£o de leads em campo</div>
+        <div class="desc">Capta&ccedil;&atilde;o de leads em campo</div>
         <div class="pw-box" id="pw-sdr">
           <input class="pw-input" id="pwi-sdr" type="password" placeholder="Digite a senha..." onkeydown="if(event.key==='Enter')tentarLogin('sdr')" onclick="event.stopPropagation()" />
           <div class="pw-error" id="pwe-sdr">Senha incorreta. Tente novamente.</div>
@@ -655,7 +655,7 @@
       <span class="icon"></span>
       <div style="flex:1">
         <div class="label">Gestor</div>
-        <div class="desc">Vis√£o completa do pipeline</div>
+        <div class="desc">Vis&atilde;o completa do pipeline</div>
         <div class="pw-box" id="pw-gestor">
           <input class="pw-input" id="pwi-gestor" type="password" placeholder="Digite a senha..." onkeydown="if(event.key==='Enter')tentarLogin('gestor')" onclick="event.stopPropagation()" />
           <div class="pw-error" id="pwe-gestor">Senha incorreta. Tente novamente.</div>
@@ -679,7 +679,7 @@
 <div id="sdrScreen" style="display:none">
   <div class="sdr-screen">
     <div class="sdr-header">
-      <h1>Capta√ß√£o de Lead</h1>
+      <h1>Capta&ccedil;&atilde;o de Lead</h1>
       <p>Novo Prospecto</p>
     </div>
 
@@ -693,7 +693,7 @@
     <div class="form-card">
       <div class="form-group">
         <label>Nome completo</label>
-        <input class="form-control" id="fNome" type="text" placeholder="Ex: Jo√£o da Silva" />
+        <input class="form-control" id="fNome" type="text" placeholder="Ex: Jo&atilde;o da Silva" />
       </div>
       <div class="form-group">
         <label>Contato (WhatsApp)</label>
@@ -701,7 +701,7 @@
           oninput="formatPhone(this)" maxlength="15" />
       </div>
       <div class="form-group">
-        <label>Placa do ve√≠culo</label>
+        <label>Placa do ve&iacute;culo</label>
         <input class="form-control" id="fPlaca" type="text" placeholder="Ex: ABC-1234"
           oninput="formatPlaca(this)" maxlength="8" style="text-transform:uppercase" />
       </div>
@@ -709,7 +709,7 @@
         <label>Tem seguro no momento?</label>
         <div class="radio-group">
           <button class="radio-btn sim" id="btnSim" onclick="selectSeguro('sim')">Sim</button>
-          <button class="radio-btn nao" id="btnNao" onclick="selectSeguro('nao')">N√£o</button>
+          <button class="radio-btn nao" id="btnNao" onclick="selectSeguro('nao')">N&atilde;o</button>
         </div>
       </div>
       <button class="btn-primary" id="btnSalvar" onclick="salvarLead()">
@@ -773,7 +773,7 @@ let unsubscribeLeads = null;
 const STAGES = [
   { id: 'novo',    label: 'NOVO LEAD',               color: '#1565c0', bg: '#e3f2fd', col: 'col-novo' },
   { id: 'contato', label: 'CONTATO REALIZADO',        color: '#2e7d32', bg: '#e8f5e9', col: 'col-contato' },
-  { id: 'negoc',   label: 'NEGOCIA√á√ÉO',               color: '#e65100', bg: '#fff8e1', col: 'col-negoc' },
+  { id: 'negoc',   label: 'NEGOCIA&Ccedil;&Atilde;O',               color: '#e65100', bg: '#fff8e1', col: 'col-negoc' },
   { id: 'aguard',  label: 'AGUARDANDO DOC/PAGAMENTO', color: '#6a1b9a', bg: '#f3e5f5', col: 'col-aguard' },
   { id: 'venda',   label: 'VENDA',                    color: '#1b5e20', bg: '#e8f5e9', col: 'col-venda' },
   { id: 'perdido', label: 'LEAD PERDIDO',             color: '#b71c1c', bg: '#ffebee', col: 'col-perdido' },
@@ -821,10 +821,10 @@ function showToast(msg, color) {
 function timeAgo(ts) {
   const diff = Math.floor((Date.now() - ts) / 60000);
   if (diff < 1) return 'agora mesmo';
-  if (diff === 1) return '1 min atr√°s';
-  if (diff < 60) return `${diff} min atr√°s`;
+  if (diff === 1) return '1 min atr&aacute;s';
+  if (diff < 60) return `${diff} min atr&aacute;s`;
   const h = Math.floor(diff / 60);
-  return `${h}h atr√°s`;
+  return `${h}h atr&aacute;s`;
 }
 
 function todayLeadsCount() {
@@ -953,7 +953,7 @@ async function salvarLead() {
     selectedSeguro = null;
     showToast('Lead cadastrado com sucesso!');
   } catch(e) {
-    showToast('Erro ao salvar. Verifique a conex√£o.', '#e53935');
+    showToast('Erro ao salvar. Verifique a conex&atilde;o.', '#e53935');
   } finally {
     btnSalvar.disabled = false;
     btnSalvar.textContent = 'Cadastrar Lead';
@@ -962,7 +962,7 @@ async function salvarLead() {
 
 // ===== KANBAN =====
 function visibleLeads() {
-  // Vendedor v√™ leads com >= 15 min ou que j√° foram movidos de "novo"
+  // Vendedor v&ecirc; leads com >= 15 min ou que j&aacute; foram movidos de "novo"
   return leads.filter(l => {
     if (currentRole === 'gestor') return true;
     const age = (Date.now() - l.createdAt) / 60000;
@@ -994,7 +994,7 @@ function renderKanban() {
   // Stats
   const statsRow = document.getElementById('statsRow');
   const stageColors = { novo:'#1565c0', contato:'#2e7d32', negoc:'#e65100', aguard:'#7b1fa2', venda:'#1b5e20', perdido:'#e53935' };
-  const statLabels = { novo:'Novos', contato:'Contactados', negoc:'Negocia√ß√£o', aguard:'Aguard. Doc', venda:'Vendas', perdido:'Perdidos' };
+  const statLabels = { novo:'Novos', contato:'Contactados', negoc:'Negocia&ccedil;&atilde;o', aguard:'Aguard. Doc', venda:'Vendas', perdido:'Perdidos' };
   let statsHtml = '';
   STAGES.forEach(s => {
     const cnt = all.filter(l => l.stage === s.id).length;
@@ -1030,7 +1030,7 @@ function buildNotesHtml(lead) {
   if (notes.length === 0) {
     return `<div class="card-notes">
       <div class="note-input-row">
-        <input class="note-input" id="ni-${lead.id}" placeholder="Registrar liga√ß√£o ou obs..." onkeydown="if(event.key==='Enter')addNote('${lead.id}')" />
+        <input class="note-input" id="ni-${lead.id}" placeholder="Registrar liga&ccedil;&atilde;o ou obs..." onkeydown="if(event.key==='Enter')addNote('${lead.id}')" />
         <button class="btn-note-add" onclick="addNote('${lead.id}')">+ Obs</button>
       </div>
     </div>`;
@@ -1043,7 +1043,7 @@ function buildNotesHtml(lead) {
       <div class="note-meta">${new Date(n.at).toLocaleString('pt-BR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</div>
     </div>`).join('');
   return `<div class="card-notes">
-    ${hasMore ? `<button class="notes-toggle" onclick="openModal('${lead.id}')">Ver todas (${notes.length} anota√ß√µes)</button>` : ''}
+    ${hasMore ? `<button class="notes-toggle" onclick="openModal('${lead.id}')">Ver todas (${notes.length} anota&ccedil;&otilde;es)</button>` : ''}
     ${notesHtml}
     <div class="note-input-row">
       <input class="note-input" id="ni-${lead.id}" placeholder="Nova obs..." onkeydown="if(event.key==='Enter')addNote('${lead.id}')" />
@@ -1062,9 +1062,9 @@ async function addNote(id) {
   const notes = [...(lead.notes || []), { text, at: Date.now() }];
   try {
     await updateDoc(doc(db, 'leads', id), { notes });
-    showToast('Anota√ß√£o salva!');
+    showToast('Anota&ccedil;&atilde;o salva!');
   } catch(e) {
-    showToast('Erro ao salvar anota√ß√£o.', '#e53935');
+    showToast('Erro ao salvar anota&ccedil;&atilde;o.', '#e53935');
   }
 }
 
@@ -1106,7 +1106,7 @@ function buildCard(lead) {
 }
 
 function openWA(phone, nome, placa) {
-  const msg = encodeURIComponent(`Ol√° ${nome}! Aqui √© da Fernandes Fortis Seguros. Vi que seu ve√≠culo de placa ${placa} ainda n√£o possui cobertura. Posso te apresentar as melhores op√ß√µes do mercado hoje?`);
+  const msg = encodeURIComponent(`Ol&aacute; ${nome}! Aqui &eacute; da Fernandes Fortis Seguros. Vi que seu ve&iacute;culo de placa ${placa} ainda n&atilde;o possui cobertura. Posso te apresentar as melhores op&ccedil;&otilde;es do mercado hoje?`);
   window.open(`https://wa.me/55${phone}?text=${msg}`, '_blank');
 }
 
@@ -1138,12 +1138,12 @@ function openModal(id) {
     <div class="modal-field"><label>Contato</label><p>${lead.contato}</p></div>
     <div class="modal-field"><label>Placa</label><p>${lead.placa}</p></div>
     <div class="modal-field"><label>Seguro atual</label><p>${lead.seguro === 'sim' ? 'Tem seguro' : 'Sem seguro'}</p></div>
-    <div class="modal-field"><label>Est√°gio atual</label><p>${s.label}</p></div>
+    <div class="modal-field"><label>Est&aacute;gio atual</label><p>${s.label}</p></div>
     <div class="modal-field"><label>Captado em</label><p>${new Date(lead.createdAt).toLocaleString('pt-BR')}</p></div>
     <div class="modal-field">
-      <label>Hist√≥rico de anota√ß√µes (${(lead.notes||[]).length})</label>
+      <label>Hist&oacute;rico de anota&ccedil;&otilde;es (${(lead.notes||[]).length})</label>
       <div style="max-height:200px;overflow-y:auto;margin-top:6px">
-        ${(lead.notes||[]).length === 0 ? '<p style="color:var(--gray-500);font-size:.82rem">Nenhuma anota√ß√£o ainda.</p>' :
+        ${(lead.notes||[]).length === 0 ? '<p style="color:var(--gray-500);font-size:.82rem">Nenhuma anota&ccedil;&atilde;o ainda.</p>' :
           [...(lead.notes||[])].reverse().map(n => `
             <div class="note-item">
               ${n.text}
@@ -1151,12 +1151,12 @@ function openModal(id) {
             </div>`).join('')}
       </div>
       <div class="note-input-row" style="margin-top:8px">
-        <input class="note-input" id="modalNoteInput" placeholder="Nova anota√ß√£o..." onkeydown="if(event.key==='Enter')addNoteFromModal('${lead.id}')" />
+        <input class="note-input" id="modalNoteInput" placeholder="Nova anota&ccedil;&atilde;o..." onkeydown="if(event.key==='Enter')addNoteFromModal('${lead.id}')" />
         <button class="btn-note-add" onclick="addNoteFromModal('${lead.id}')">+ Obs</button>
       </div>
     </div>
     <div style="margin-top:16px">
-      <label style="font-size:.8rem;font-weight:600;color:var(--gray-500)">Mover para est√°gio</label>
+      <label style="font-size:.8rem;font-weight:600;color:var(--gray-500)">Mover para est&aacute;gio</label>
       <div class="modal-stages">${stagesHtml}</div>
     </div>
     <div style="margin-top:16px">
@@ -1179,10 +1179,10 @@ async function addNoteFromModal(id) {
   const notes = [...(lead.notes || []), { text, at: Date.now() }];
   try {
     await updateDoc(doc(db, 'leads', id), { notes });
-    showToast('Anota√ß√£o salva!');
+    showToast('Anota&ccedil;&atilde;o salva!');
     openModal(id);
   } catch(e) {
-    showToast('Erro ao salvar anota√ß√£o.', '#e53935');
+    showToast('Erro ao salvar anota&ccedil;&atilde;o.', '#e53935');
   }
 }
 
@@ -1193,7 +1193,7 @@ function closeModal(e) {
   }
 }
 
-// ===== EXPOR FUN√á√ïES AO ESCOPO GLOBAL (m√≥dulo ES) =====
+// ===== EXPOR FUN&Ccedil;&Otilde;ES AO ESCOPO GLOBAL (m&oacute;dulo ES) =====
 window.togglePw      = togglePw;
 window.tentarLogin   = tentarLogin;
 window.login         = login;
