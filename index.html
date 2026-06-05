@@ -83,6 +83,41 @@
     .role-btn .label { font-weight: 700; font-size: 1rem; color: var(--gray-900); }
     .role-btn .desc  { font-size: .8rem; color: var(--gray-500); }
 
+    .pw-box {
+      display: none;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--gray-200);
+    }
+    .pw-box.open { display: block; }
+    .pw-input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 2px solid var(--gray-200);
+      border-radius: 8px;
+      font-size: .9rem;
+      outline: none;
+      margin-bottom: 8px;
+      transition: border-color .2s;
+    }
+    .pw-input:focus { border-color: var(--primary-light); }
+    .pw-input.error { border-color: var(--danger); }
+    .pw-error { font-size: .78rem; color: var(--danger); margin-bottom: 6px; display: none; }
+    .pw-error.show { display: block; }
+    .btn-entrar {
+      width: 100%;
+      padding: 10px;
+      background: var(--primary);
+      color: var(--white);
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: .9rem;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .btn-entrar:hover { background: var(--primary-light); }
+
     /* ===== TOP NAV ===== */
     .topnav {
       background: var(--primary);
@@ -319,7 +354,7 @@
     }
     .lead-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
     .lead-card.hot::before {
-      content: '🔥';
+      content: 'üî•';
       position: absolute;
       top: 10px; right: 10px;
       font-size: .9rem;
@@ -586,34 +621,54 @@
 <div id="loginScreen" class="login-screen">
   <div class="login-card">
     <div class="login-logo">Fernandes Fortis</div>
-    <div class="login-subtitle">CRM de Captação · Selecione seu perfil</div>
-    <button class="role-btn" onclick="login('sdr')">
-      <span class="icon">🚗</span>
-      <div>
+    <div class="login-subtitle">CRM de Capta√ß√£o ¬∑ Selecione seu perfil</div>
+    <!-- Consultor -->
+    <div class="role-btn" onclick="togglePw('sdr', event)">
+      <span class="icon">üöó</span>
+      <div style="flex:1">
         <div class="label">Consultor de Relacionamento</div>
-        <div class="desc">Captação de leads em campo</div>
+        <div class="desc">Capta√ß√£o de leads em campo</div>
+        <div class="pw-box" id="pw-sdr">
+          <input class="pw-input" id="pwi-sdr" type="password" placeholder="Digite a senha..." onkeydown="if(event.key==='Enter')tentarLogin('sdr')" onclick="event.stopPropagation()" />
+          <div class="pw-error" id="pwe-sdr">Senha incorreta. Tente novamente.</div>
+          <button class="btn-entrar" onclick="tentarLogin('sdr');event.stopPropagation()">Entrar ‚Üí</button>
+        </div>
       </div>
-    </button>
-    <button class="role-btn" onclick="login('vendedor')">
-      <span class="icon">💼</span>
-      <div>
+    </div>
+
+    <!-- Analista -->
+    <div class="role-btn" onclick="togglePw('vendedor', event)">
+      <span class="icon">üíº</span>
+      <div style="flex:1">
         <div class="label">Analista Comercial</div>
         <div class="desc">Atendimento, Kanban e follow-up</div>
+        <div class="pw-box" id="pw-vendedor">
+          <input class="pw-input" id="pwi-vendedor" type="password" placeholder="Digite a senha..." onkeydown="if(event.key==='Enter')tentarLogin('vendedor')" onclick="event.stopPropagation()" />
+          <div class="pw-error" id="pwe-vendedor">Senha incorreta. Tente novamente.</div>
+          <button class="btn-entrar" onclick="tentarLogin('vendedor');event.stopPropagation()">Entrar ‚Üí</button>
+        </div>
       </div>
-    </button>
-    <button class="role-btn" onclick="login('gestor')">
-      <span class="icon">📊</span>
-      <div>
+    </div>
+
+    <!-- Gestor -->
+    <div class="role-btn" onclick="togglePw('gestor', event)">
+      <span class="icon">üìä</span>
+      <div style="flex:1">
         <div class="label">Gestor</div>
-        <div class="desc">Visão completa do pipeline</div>
+        <div class="desc">Vis√£o completa do pipeline</div>
+        <div class="pw-box" id="pw-gestor">
+          <input class="pw-input" id="pwi-gestor" type="password" placeholder="Digite a senha..." onkeydown="if(event.key==='Enter')tentarLogin('gestor')" onclick="event.stopPropagation()" />
+          <div class="pw-error" id="pwe-gestor">Senha incorreta. Tente novamente.</div>
+          <button class="btn-entrar" onclick="tentarLogin('gestor');event.stopPropagation()">Entrar ‚Üí</button>
+        </div>
       </div>
-    </button>
+    </div>
   </div>
 </div>
 
 <!-- ===================== NAV ===================== -->
 <nav class="topnav" id="topNav" style="display:none">
-  <div class="topnav-brand">⚡ Fernandes Fortis</div>
+  <div class="topnav-brand">‚ö° Fernandes Fortis</div>
   <div style="display:flex;align-items:center;gap:10px">
     <span class="topnav-role" id="navRole"></span>
     <button class="logout-btn" onclick="logout()">Sair</button>
@@ -624,7 +679,7 @@
 <div id="sdrScreen" style="display:none">
   <div class="sdr-screen">
     <div class="sdr-header">
-      <h1>📍 Captação de Lead</h1>
+      <h1>üìç Capta√ß√£o de Lead</h1>
       <p>Novo Prospecto</p>
     </div>
 
@@ -637,28 +692,28 @@
 
     <div class="form-card">
       <div class="form-group">
-        <label>👤 Nome completo</label>
-        <input class="form-control" id="fNome" type="text" placeholder="Ex: João da Silva" />
+        <label>üë§ Nome completo</label>
+        <input class="form-control" id="fNome" type="text" placeholder="Ex: Jo√£o da Silva" />
       </div>
       <div class="form-group">
-        <label>📱 Contato (WhatsApp)</label>
+        <label>üì± Contato (WhatsApp)</label>
         <input class="form-control" id="fContato" type="tel" placeholder="(00) 00000-0000"
           oninput="formatPhone(this)" maxlength="15" />
       </div>
       <div class="form-group">
-        <label>🚘 Placa do veículo</label>
+        <label>üöò Placa do ve√≠culo</label>
         <input class="form-control" id="fPlaca" type="text" placeholder="Ex: ABC-1234"
           oninput="formatPlaca(this)" maxlength="8" style="text-transform:uppercase" />
       </div>
       <div class="form-group">
-        <label>🛡️ Tem seguro no momento?</label>
+        <label>üõ°Ô∏è Tem seguro no momento?</label>
         <div class="radio-group">
-          <button class="radio-btn sim" id="btnSim" onclick="selectSeguro('sim')">✅ Sim</button>
-          <button class="radio-btn nao" id="btnNao" onclick="selectSeguro('nao')">❌ Não</button>
+          <button class="radio-btn sim" id="btnSim" onclick="selectSeguro('sim')">‚úÖ Sim</button>
+          <button class="radio-btn nao" id="btnNao" onclick="selectSeguro('nao')">‚ùå N√£o</button>
         </div>
       </div>
       <button class="btn-primary" id="btnSalvar" onclick="salvarLead()">
-        ➕ Cadastrar Lead
+        ‚ûï Cadastrar Lead
       </button>
     </div>
   </div>
@@ -668,9 +723,9 @@
 <div id="kanbanScreen" style="display:none">
   <div class="kanban-screen">
     <div class="kanban-top">
-      <div class="kanban-title">📋 Pipeline de Leads</div>
+      <div class="kanban-title">üìã Pipeline de Leads</div>
       <div id="newLeadAlert" class="new-lead-alert" style="display:none">
-        🔔 <span id="newLeadAlertText"></span>
+        üîî <span id="newLeadAlertText"></span>
       </div>
     </div>
 
@@ -683,8 +738,8 @@
 <!-- ===================== MODAL DETALHES ===================== -->
 <div class="modal-overlay" id="modalOverlay" style="display:none" onclick="closeModal(event)">
   <div class="modal" onclick="event.stopPropagation()">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    <h3>📄 Detalhes do Lead</h3>
+    <button class="modal-close" onclick="closeModal()">‚úï</button>
+    <h3>üìÑ Detalhes do Lead</h3>
     <div id="modalContent"></div>
   </div>
 </div>
@@ -718,7 +773,7 @@ let unsubscribeLeads = null;
 const STAGES = [
   { id: 'novo',    label: 'NOVO LEAD',               color: '#1565c0', bg: '#e3f2fd', col: 'col-novo' },
   { id: 'contato', label: 'CONTATO REALIZADO',        color: '#2e7d32', bg: '#e8f5e9', col: 'col-contato' },
-  { id: 'negoc',   label: 'NEGOCIAÇÃO',               color: '#e65100', bg: '#fff8e1', col: 'col-negoc' },
+  { id: 'negoc',   label: 'NEGOCIA√á√ÉO',               color: '#e65100', bg: '#fff8e1', col: 'col-negoc' },
   { id: 'aguard',  label: 'AGUARDANDO DOC/PAGAMENTO', color: '#6a1b9a', bg: '#f3e5f5', col: 'col-aguard' },
   { id: 'venda',   label: 'VENDA',                    color: '#1b5e20', bg: '#e8f5e9', col: 'col-venda' },
   { id: 'perdido', label: 'LEAD PERDIDO',             color: '#b71c1c', bg: '#ffebee', col: 'col-perdido' },
@@ -766,10 +821,10 @@ function showToast(msg, color) {
 function timeAgo(ts) {
   const diff = Math.floor((Date.now() - ts) / 60000);
   if (diff < 1) return 'agora mesmo';
-  if (diff === 1) return '1 min atrás';
-  if (diff < 60) return `${diff} min atrás`;
+  if (diff === 1) return '1 min atr√°s';
+  if (diff < 60) return `${diff} min atr√°s`;
   const h = Math.floor(diff / 60);
-  return `${h}h atrás`;
+  return `${h}h atr√°s`;
 }
 
 function todayLeadsCount() {
@@ -777,12 +832,53 @@ function todayLeadsCount() {
   return leads.filter(l => new Date(l.createdAt).toDateString() === today).length;
 }
 
+// ===== SENHAS POR PERFIL =====
+const SENHAS = {
+  sdr:      'consultor@ff',
+  vendedor: 'analista@ff',
+  gestor:   'gestor@ff'
+};
+
+function togglePw(role, e) {
+  e && e.stopPropagation();
+  ['sdr','vendedor','gestor'].forEach(r => {
+    if (r !== role) {
+      document.getElementById('pw-' + r).classList.remove('open');
+      document.getElementById('pwi-' + r).value = '';
+      document.getElementById('pwe-' + r).classList.remove('show');
+      document.getElementById('pwi-' + r).classList.remove('error');
+    }
+  });
+  const box = document.getElementById('pw-' + role);
+  box.classList.toggle('open');
+  if (box.classList.contains('open')) {
+    setTimeout(() => document.getElementById('pwi-' + role).focus(), 50);
+  }
+}
+
+function tentarLogin(role) {
+  const input = document.getElementById('pwi-' + role);
+  const errEl = document.getElementById('pwe-' + role);
+  if (input.value === SENHAS[role]) {
+    errEl.classList.remove('show');
+    input.classList.remove('error');
+    input.value = '';
+    document.getElementById('pw-' + role).classList.remove('open');
+    login(role);
+  } else {
+    input.classList.add('error');
+    errEl.classList.add('show');
+    input.value = '';
+    input.focus();
+  }
+}
+
 // ===== AUTH =====
 function login(role) {
   currentRole = role;
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('topNav').style.display = 'flex';
-  const labels = { sdr: '🚗 Consultor de Relacionamento', vendedor: '💼 Analista Comercial', gestor: '📊 Gestor' };
+  const labels = { sdr: 'üöó Consultor de Relacionamento', vendedor: 'üíº Analista Comercial', gestor: 'üìä Gestor' };
   document.getElementById('navRole').textContent = labels[role];
 
   // Listener em tempo real do Firestore
@@ -828,10 +924,10 @@ async function salvarLead() {
   const contato = document.getElementById('fContato').value.trim();
   const placa   = document.getElementById('fPlaca').value.trim();
 
-  if (!nome)    { showToast('⚠️ Informe o nome', '#f57c00'); return; }
-  if (!contato) { showToast('⚠️ Informe o contato', '#f57c00'); return; }
-  if (!placa)   { showToast('⚠️ Informe a placa', '#f57c00'); return; }
-  if (!selectedSeguro) { showToast('⚠️ Selecione se tem seguro', '#f57c00'); return; }
+  if (!nome)    { showToast('‚ö†Ô∏è Informe o nome', '#f57c00'); return; }
+  if (!contato) { showToast('‚ö†Ô∏è Informe o contato', '#f57c00'); return; }
+  if (!placa)   { showToast('‚ö†Ô∏è Informe a placa', '#f57c00'); return; }
+  if (!selectedSeguro) { showToast('‚ö†Ô∏è Selecione se tem seguro', '#f57c00'); return; }
 
   const btnSalvar = document.getElementById('btnSalvar');
   btnSalvar.disabled = true;
@@ -855,18 +951,18 @@ async function salvarLead() {
     document.getElementById('btnSim').classList.remove('active');
     document.getElementById('btnNao').classList.remove('active');
     selectedSeguro = null;
-    showToast('✅ Lead cadastrado com sucesso!');
+    showToast('‚úÖ Lead cadastrado com sucesso!');
   } catch(e) {
-    showToast('❌ Erro ao salvar. Verifique a conexão.', '#e53935');
+    showToast('‚ùå Erro ao salvar. Verifique a conex√£o.', '#e53935');
   } finally {
     btnSalvar.disabled = false;
-    btnSalvar.textContent = '➕ Cadastrar Lead';
+    btnSalvar.textContent = '‚ûï Cadastrar Lead';
   }
 }
 
 // ===== KANBAN =====
 function visibleLeads() {
-  // Vendedor vê leads com >= 15 min ou que já foram movidos de "novo"
+  // Vendedor v√™ leads com >= 15 min ou que j√° foram movidos de "novo"
   return leads.filter(l => {
     if (currentRole === 'gestor') return true;
     const age = (Date.now() - l.createdAt) / 60000;
@@ -898,7 +994,7 @@ function renderKanban() {
   // Stats
   const statsRow = document.getElementById('statsRow');
   const stageColors = { novo:'#1565c0', contato:'#2e7d32', negoc:'#e65100', aguard:'#7b1fa2', venda:'#1b5e20', perdido:'#e53935' };
-  const statLabels = { novo:'Novos', contato:'Contactados', negoc:'Negociação', aguard:'Aguard. Doc', venda:'Vendas', perdido:'Perdidos' };
+  const statLabels = { novo:'Novos', contato:'Contactados', negoc:'Negocia√ß√£o', aguard:'Aguard. Doc', venda:'Vendas', perdido:'Perdidos' };
   let statsHtml = '';
   STAGES.forEach(s => {
     const cnt = all.filter(l => l.stage === s.id).length;
@@ -934,7 +1030,7 @@ function buildNotesHtml(lead) {
   if (notes.length === 0) {
     return `<div class="card-notes">
       <div class="note-input-row">
-        <input class="note-input" id="ni-${lead.id}" placeholder="📝 Registrar ligação ou obs..." onkeydown="if(event.key==='Enter')addNote('${lead.id}')" />
+        <input class="note-input" id="ni-${lead.id}" placeholder="üìù Registrar liga√ß√£o ou obs..." onkeydown="if(event.key==='Enter')addNote('${lead.id}')" />
         <button class="btn-note-add" onclick="addNote('${lead.id}')">+ Obs</button>
       </div>
     </div>`;
@@ -944,13 +1040,13 @@ function buildNotesHtml(lead) {
   const notesHtml = last2.map(n => `
     <div class="note-item">
       ${n.text}
-      <div class="note-meta">🕐 ${new Date(n.at).toLocaleString('pt-BR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</div>
+      <div class="note-meta">üïê ${new Date(n.at).toLocaleString('pt-BR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</div>
     </div>`).join('');
   return `<div class="card-notes">
-    ${hasMore ? `<button class="notes-toggle" onclick="openModal('${lead.id}')">📋 Ver todas (${notes.length} anotações)</button>` : ''}
+    ${hasMore ? `<button class="notes-toggle" onclick="openModal('${lead.id}')">üìã Ver todas (${notes.length} anota√ß√µes)</button>` : ''}
     ${notesHtml}
     <div class="note-input-row">
-      <input class="note-input" id="ni-${lead.id}" placeholder="📝 Nova obs..." onkeydown="if(event.key==='Enter')addNote('${lead.id}')" />
+      <input class="note-input" id="ni-${lead.id}" placeholder="üìù Nova obs..." onkeydown="if(event.key==='Enter')addNote('${lead.id}')" />
       <button class="btn-note-add" onclick="addNote('${lead.id}')">+ Obs</button>
     </div>
   </div>`;
@@ -966,9 +1062,9 @@ async function addNote(id) {
   const notes = [...(lead.notes || []), { text, at: Date.now() }];
   try {
     await updateDoc(doc(db, 'leads', id), { notes });
-    showToast('📝 Anotação salva!');
+    showToast('üìù Anota√ß√£o salva!');
   } catch(e) {
-    showToast('❌ Erro ao salvar anotação.', '#e53935');
+    showToast('‚ùå Erro ao salvar anota√ß√£o.', '#e53935');
   }
 }
 
@@ -984,25 +1080,25 @@ function buildCard(lead) {
   const nextStage = stageIdx < STAGES.length - 2 ? STAGES[stageIdx + 1] : null;
 
   div.innerHTML = `
-    <div class="lead-name">👤 ${lead.nome}</div>
+    <div class="lead-name">üë§ ${lead.nome}</div>
     <div class="lead-meta">
-      <span>📱 ${lead.contato}</span>
-      <span>🚘 ${lead.placa}</span>
+      <span>üì± ${lead.contato}</span>
+      <span>üöò ${lead.placa}</span>
     </div>
     <div>
-      <span class="badge-seguro ${lead.seguro}">${lead.seguro === 'sim' ? '🛡️ Tem seguro' : '❌ Sem seguro'}</span>
+      <span class="badge-seguro ${lead.seguro}">${lead.seguro === 'sim' ? 'üõ°Ô∏è Tem seguro' : '‚ùå Sem seguro'}</span>
     </div>
     ${buildNotesHtml(lead)}
     <div class="time-badge ${isUrgent ? 'urgent' : ''}">
-      ${isUrgent ? '⏰' : '🕐'} ${timeAgo(lead.createdAt)}
+      ${isUrgent ? '‚è∞' : 'üïê'} ${timeAgo(lead.createdAt)}
     </div>
     <div class="card-actions">
       <button class="btn-wa" onclick="openWA('${phoneRaw}', '${lead.nome}', '${lead.placa}')">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
         WhatsApp
       </button>
-      ${nextStage ? `<button class="btn-move" onclick="moveStage('${lead.id}', '${nextStage.id}')">→ ${nextStage.label.split(' ')[0]}</button>` : ''}
-      ${lead.stage !== 'perdido' ? `<button class="btn-perdido" onclick="moveStage('${lead.id}', 'perdido')" title="Marcar como perdido">✗</button>` : ''}
+      ${nextStage ? `<button class="btn-move" onclick="moveStage('${lead.id}', '${nextStage.id}')">‚Üí ${nextStage.label.split(' ')[0]}</button>` : ''}
+      ${lead.stage !== 'perdido' ? `<button class="btn-perdido" onclick="moveStage('${lead.id}', 'perdido')" title="Marcar como perdido">‚úó</button>` : ''}
     </div>
   `;
   div.querySelector('.lead-name').addEventListener('click', () => openModal(lead.id));
@@ -1010,7 +1106,7 @@ function buildCard(lead) {
 }
 
 function openWA(phone, nome, placa) {
-  const msg = encodeURIComponent(`Olá ${nome}! Aqui é da Fernandes Fortis Seguros. Vi que seu veículo de placa ${placa} ainda não possui cobertura. Posso te apresentar as melhores opções do mercado hoje?`);
+  const msg = encodeURIComponent(`Ol√° ${nome}! Aqui √© da Fernandes Fortis Seguros. Vi que seu ve√≠culo de placa ${placa} ainda n√£o possui cobertura. Posso te apresentar as melhores op√ß√µes do mercado hoje?`);
   window.open(`https://wa.me/55${phone}?text=${msg}`, '_blank');
 }
 
@@ -1021,9 +1117,9 @@ async function moveStage(id, newStage) {
   try {
     await updateDoc(doc(db, 'leads', id), { stage: newStage, history });
     const s = STAGES.find(s => s.id === newStage);
-    showToast(`✅ Movido para: ${s.label}`);
+    showToast(`‚úÖ Movido para: ${s.label}`);
   } catch(e) {
-    showToast('❌ Erro ao atualizar.', '#e53935');
+    showToast('‚ùå Erro ao atualizar.', '#e53935');
   }
 }
 
@@ -1041,26 +1137,26 @@ function openModal(id) {
     <div class="modal-field"><label>Nome</label><p>${lead.nome}</p></div>
     <div class="modal-field"><label>Contato</label><p>${lead.contato}</p></div>
     <div class="modal-field"><label>Placa</label><p>${lead.placa}</p></div>
-    <div class="modal-field"><label>Seguro atual</label><p>${lead.seguro === 'sim' ? '🛡️ Tem seguro' : '❌ Sem seguro'}</p></div>
-    <div class="modal-field"><label>Estágio atual</label><p>${s.label}</p></div>
+    <div class="modal-field"><label>Seguro atual</label><p>${lead.seguro === 'sim' ? 'üõ°Ô∏è Tem seguro' : '‚ùå Sem seguro'}</p></div>
+    <div class="modal-field"><label>Est√°gio atual</label><p>${s.label}</p></div>
     <div class="modal-field"><label>Captado em</label><p>${new Date(lead.createdAt).toLocaleString('pt-BR')}</p></div>
     <div class="modal-field">
-      <label>📋 Histórico de anotações (${(lead.notes||[]).length})</label>
+      <label>üìã Hist√≥rico de anota√ß√µes (${(lead.notes||[]).length})</label>
       <div style="max-height:200px;overflow-y:auto;margin-top:6px">
-        ${(lead.notes||[]).length === 0 ? '<p style="color:var(--gray-500);font-size:.82rem">Nenhuma anotação ainda.</p>' :
+        ${(lead.notes||[]).length === 0 ? '<p style="color:var(--gray-500);font-size:.82rem">Nenhuma anota√ß√£o ainda.</p>' :
           [...(lead.notes||[])].reverse().map(n => `
             <div class="note-item">
               ${n.text}
-              <div class="note-meta">🕐 ${new Date(n.at).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</div>
+              <div class="note-meta">üïê ${new Date(n.at).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</div>
             </div>`).join('')}
       </div>
       <div class="note-input-row" style="margin-top:8px">
-        <input class="note-input" id="modalNoteInput" placeholder="Nova anotação..." onkeydown="if(event.key==='Enter')addNoteFromModal('${lead.id}')" />
+        <input class="note-input" id="modalNoteInput" placeholder="Nova anota√ß√£o..." onkeydown="if(event.key==='Enter')addNoteFromModal('${lead.id}')" />
         <button class="btn-note-add" onclick="addNoteFromModal('${lead.id}')">+ Obs</button>
       </div>
     </div>
     <div style="margin-top:16px">
-      <label style="font-size:.8rem;font-weight:600;color:var(--gray-500)">Mover para estágio</label>
+      <label style="font-size:.8rem;font-weight:600;color:var(--gray-500)">Mover para est√°gio</label>
       <div class="modal-stages">${stagesHtml}</div>
     </div>
     <div style="margin-top:16px">
@@ -1083,10 +1179,10 @@ async function addNoteFromModal(id) {
   const notes = [...(lead.notes || []), { text, at: Date.now() }];
   try {
     await updateDoc(doc(db, 'leads', id), { notes });
-    showToast('📝 Anotação salva!');
+    showToast('üìù Anota√ß√£o salva!');
     openModal(id);
   } catch(e) {
-    showToast('❌ Erro ao salvar anotação.', '#e53935');
+    showToast('‚ùå Erro ao salvar anota√ß√£o.', '#e53935');
   }
 }
 
@@ -1097,7 +1193,9 @@ function closeModal(e) {
   }
 }
 
-// ===== EXPOR FUNÇÕES AO ESCOPO GLOBAL (módulo ES) =====
+// ===== EXPOR FUN√á√ïES AO ESCOPO GLOBAL (m√≥dulo ES) =====
+window.togglePw      = togglePw;
+window.tentarLogin   = tentarLogin;
 window.login         = login;
 window.logout        = logout;
 window.salvarLead    = salvarLead;
