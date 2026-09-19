@@ -354,7 +354,7 @@
     }
     .lead-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
     .lead-card.hot::before {
-      content: 'üî•';
+      content: '🔥';
       position: absolute;
       top: 10px; right: 10px;
       font-size: .9rem;
@@ -784,6 +784,13 @@
           <button class="radio-btn nao" id="btnNao" onclick="selectSeguro('nao')">&#10060; N&atilde;o</button>
         </div>
       </div>
+      <div class="form-group">
+        <label>&#128101; Assessora Comercial:</label>
+        <div class="radio-group">
+          <button class="radio-btn" id="btnAssessora1" onclick="selectAssessora('Monique Rodrigues')">Monique Rodrigues</button>
+          <button class="radio-btn" id="btnAssessora2" onclick="selectAssessora('Juliana Moreira')">Juliana Moreira</button>
+        </div>
+      </div>
       <button class="btn-primary" id="btnSalvar" onclick="salvarLead()">
         Cadastrar Lead
       </button>
@@ -808,7 +815,7 @@
 
     <div class="kanban-board" id="kanbanBoard"></div>
 
-    <!-- HISTORICO DIARIO - s√≥ aparece para o gestor -->
+    <!-- HISTORICO DIARIO - só aparece para o gestor -->
     <div class="historico-section" id="historicoSection" style="display:none">
       <div class="historico-header">
         &#128197; Hist&oacute;rico de Capta&ccedil;&atilde;o por Dia
@@ -861,6 +868,7 @@ const db  = getFirestore(app);
 let currentRole = null;
 let leads = [];
 let selectedSeguro = null;
+let selectedAssessora = null;
 let unsubscribeLeads = null;
 
 // ===== STAGES CONFIG =====
@@ -902,6 +910,12 @@ function selectSeguro(val) {
   selectedSeguro = val;
   document.getElementById('btnSim').classList.toggle('active', val === 'sim');
   document.getElementById('btnNao').classList.toggle('active', val === 'nao');
+}
+
+function selectAssessora(val) {
+  selectedAssessora = val;
+  document.getElementById('btnAssessora1').classList.toggle('active', val === 'Monique Rodrigues');
+  document.getElementById('btnAssessora2').classList.toggle('active', val === 'Juliana Moreira');
 }
 
 function showToast(msg, color) {
@@ -1005,7 +1019,10 @@ function logout() {
   ['fNome','fContato','fPlaca'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('btnSim').classList.remove('active');
   document.getElementById('btnNao').classList.remove('active');
+  document.getElementById('btnAssessora1').classList.remove('active');
+  document.getElementById('btnAssessora2').classList.remove('active');
   selectedSeguro = null;
+  selectedAssessora = null;
 }
 
 // ===== SDR =====
@@ -1022,6 +1039,7 @@ async function salvarLead() {
   if (!contato) { showToast('Informe o contato', '#f57c00'); return; }
   if (!placa)   { showToast('Informe a placa', '#f57c00'); return; }
   if (!selectedSeguro) { showToast('Selecione se tem seguro', '#f57c00'); return; }
+  if (!selectedAssessora) { showToast('Selecione a Assessora Comercial', '#f57c00'); return; }
 
   const btnSalvar = document.getElementById('btnSalvar');
   btnSalvar.disabled = true;
@@ -1033,6 +1051,7 @@ async function salvarLead() {
       contato,
       placa: placa.toUpperCase(),
       seguro: selectedSeguro,
+      assessora: selectedAssessora,
       stage: 'novo',
       createdAt: Date.now(), // timestamp em ms
       notes: [],
@@ -1044,7 +1063,10 @@ async function salvarLead() {
     document.getElementById('fPlaca').value = '';
     document.getElementById('btnSim').classList.remove('active');
     document.getElementById('btnNao').classList.remove('active');
+    document.getElementById('btnAssessora1').classList.remove('active');
+    document.getElementById('btnAssessora2').classList.remove('active');
     selectedSeguro = null;
+    selectedAssessora = null;
     showToast('Lead cadastrado com sucesso!');
   } catch(e) {
     showToast('Erro ao salvar. Verifique a conex&atilde;o.', '#e53935');
@@ -1371,6 +1393,7 @@ window.login         = login;
 window.logout        = logout;
 window.salvarLead    = salvarLead;
 window.selectSeguro  = selectSeguro;
+window.selectAssessora = selectAssessora;
 window.formatPhone   = formatPhone;
 window.formatPlaca   = formatPlaca;
 window.moveStage     = moveStage;
