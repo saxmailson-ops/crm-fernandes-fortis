@@ -226,6 +226,7 @@
     .radio-btn.nao { color: var(--danger); }
     .radio-btn.sim.active { background: #e8f5e9; border-color: var(--accent); }
     .radio-btn.nao.active { background: #ffebee; border-color: var(--danger); }
+    .radio-btn.active { background: #e8eaf6; border-color: var(--primary); color: var(--primary); }
 
     .btn-primary {
       width: 100%;
@@ -1200,6 +1201,7 @@ function buildCard(lead) {
     </div>
     <div>
       <span class="badge-seguro ${lead.seguro}">${lead.seguro === 'sim' ? '&#128737;&#65039; Tem seguro' : '&#10060; Sem seguro'}</span>
+      ${lead.assessora ? `<span style="font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:10px;margin-top:4px;display:inline-block;background:#e8eaf6;color:var(--primary);margin-left:4px">&#128101; ${lead.assessora}</span>` : ''}
     </div>
     ${buildNotesHtml(lead)}
     <div class="time-badge ${isUrgent ? 'urgent' : ''}">
@@ -1251,6 +1253,7 @@ function openModal(id) {
     <div class="modal-field"><label>Contato</label><p>${lead.contato}</p></div>
     <div class="modal-field"><label>Placa</label><p>${lead.placa}</p></div>
     <div class="modal-field"><label>Seguro atual</label><p>${lead.seguro === 'sim' ? '&#128737;&#65039; Tem seguro' : '&#10060; Sem seguro'}</p></div>
+    ${lead.assessora ? `<div class="modal-field"><label>Assessora Comercial</label><p>&#128101; ${lead.assessora}</p></div>` : ''}
     <div class="modal-field"><label>Est&aacute;gio atual</label><p>${s.label}</p></div>
     <div class="modal-field"><label>Captado em</label><p>${new Date(lead.createdAt?.toMillis ? lead.createdAt.toMillis() : lead.createdAt).toLocaleString('pt-BR')}</p></div>
     <div class="modal-field">
@@ -1308,7 +1311,7 @@ function closeModal(e) {
 
 // ===== EXPORTAR CSV =====
 function exportarCSV() {
-  const headers = ['Nome','Contato','Placa','Seguro','Etapa','Captado em','Observacoes'];
+  const headers = ['Nome','Contato','Placa','Seguro','Assessora','Etapa','Captado em','Observacoes'];
   const stageLabels = {
     novo:'NOVO LEAD', contato:'CONTATO REALIZADO', negoc:'NEGOCIACAO',
     aguard:'AGUARDANDO DOC/PAGAMENTO', venda:'VENDA', perdido:'LEAD PERDIDO'
@@ -1321,6 +1324,7 @@ function exportarCSV() {
       l.contato,
       l.placa,
       l.seguro === 'sim' ? 'Tem seguro' : 'Sem seguro',
+      l.assessora || '',
       stageLabels[l.stage] || l.stage,
       new Date(ts).toLocaleString('pt-BR'),
       notes
