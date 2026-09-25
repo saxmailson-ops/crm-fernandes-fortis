@@ -804,6 +804,10 @@
   <div class="kanban-screen">
     <div class="kanban-top">
       <div class="kanban-title">&#128203; Pipeline de Leads</div>
+      <div style="display:flex;align-items:center;gap:8px;background:white;border:2px solid var(--gray-200);border-radius:8px;padding:6px 12px;flex:1;max-width:280px;">
+        <span style="font-size:1rem">&#128269;</span>
+        <input id="searchInput" type="text" placeholder="Buscar nome, contato ou placa..." oninput="renderKanban()" style="border:none;outline:none;font-size:.88rem;width:100%;background:transparent;" />
+      </div>
       <button onclick="exportarCSV()" style="background:#1b5e20;color:white;border:none;border-radius:8px;padding:8px 16px;font-weight:700;font-size:.85rem;cursor:pointer;display:flex;align-items:center;gap:6px;">
         &#128196; Exportar CSV
       </button>
@@ -1079,8 +1083,14 @@ async function salvarLead() {
 
 // ===== KANBAN =====
 function visibleLeads() {
-  // Todos os perfis v&ecirc;em leads imediatamente
-  return leads;
+  const input = document.getElementById('searchInput');
+  const q = input ? input.value.trim().toLowerCase() : '';
+  if (!q) return leads;
+  return leads.filter(l =>
+    l.nome?.toLowerCase().includes(q) ||
+    l.contato?.toLowerCase().includes(q) ||
+    l.placa?.toLowerCase().includes(q)
+  );
 }
 
 function renderKanban() {
