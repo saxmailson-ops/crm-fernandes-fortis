@@ -808,7 +808,7 @@
         <span style="font-size:1rem">&#128269;</span>
         <input id="searchInput" type="text" placeholder="Buscar nome, contato ou placa..." oninput="renderKanban()" style="border:none;outline:none;font-size:.88rem;width:100%;background:transparent;" />
       </div>
-      <button onclick="exportarCSV()" style="background:#1b5e20;color:white;border:none;border-radius:8px;padding:8px 16px;font-weight:700;font-size:.85rem;cursor:pointer;display:flex;align-items:center;gap:6px;">
+      <button id="btnExportCSV" onclick="exportarCSV()" style="background:#1b5e20;color:white;border:none;border-radius:8px;padding:8px 16px;font-weight:700;font-size:.85rem;cursor:pointer;display:flex;align-items:center;gap:6px;">
         &#128196; Exportar CSV
       </button>
       <div id="newLeadAlert" class="new-lead-alert" style="display:none">
@@ -1009,6 +1009,7 @@ function login(role) {
     document.getElementById('sdrScreen').style.display = 'block';
   } else {
     document.getElementById('kanbanScreen').style.display = 'block';
+    document.getElementById('btnExportCSV').style.display = role === 'gestor' ? 'flex' : 'none';
   }
 }
 
@@ -1086,10 +1087,12 @@ function visibleLeads() {
   const input = document.getElementById('searchInput');
   const q = input ? input.value.trim().toLowerCase() : '';
   if (!q) return leads;
+  const qDigits = q.replace(/\D/g, '');
   return leads.filter(l =>
     l.nome?.toLowerCase().includes(q) ||
+    l.placa?.toLowerCase().includes(q) ||
     l.contato?.toLowerCase().includes(q) ||
-    l.placa?.toLowerCase().includes(q)
+    (qDigits && l.contato?.replace(/\D/g, '').includes(qDigits))
   );
 }
 
@@ -1399,6 +1402,7 @@ function renderHistorico() {
 }
 
 // ===== EXPOR FUN&Ccedil;&Otilde;ES AO ESCOPO GLOBAL (m&oacute;dulo ES) =====
+window.renderKanban  = renderKanban;
 window.exportarCSV   = exportarCSV;
 window.renderHistorico = renderHistorico;
 window.togglePw      = togglePw;
