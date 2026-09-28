@@ -164,6 +164,16 @@
     .historico-bar-fill { height: 10px; border-radius: 5px; background: var(--primary); transition: width .3s; }
     .historico-badge { display: inline-flex; align-items: center; justify-content: center; background: var(--primary); color: var(--white); border-radius: 20px; padding: 2px 10px; font-size: .78rem; font-weight: 800; min-width: 28px; }
     .hoje-tag { background: #e8f5e9; color: #1b5e20; font-size: .72rem; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-left: 6px; }
+    /* BANNER RETORNO */
+    .retorno-alert-banner { background: linear-gradient(135deg,#e65100,#f57c00); color: white; border-radius: 12px; padding: 14px 18px; margin-bottom: 16px; }
+    .retorno-alert-banner .banner-title { font-weight: 800; font-size: .95rem; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .retorno-alert-item { background: rgba(255,255,255,.15); border-radius: 8px; padding: 10px 14px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+    .retorno-alert-item:last-child { margin-bottom: 0; }
+    .retorno-alert-info { font-size: .88rem; font-weight: 600; }
+    .retorno-alert-time { font-size: .78rem; opacity: .85; margin-top: 2px; }
+    .btn-concluir { background: white; color: #e65100; border: none; border-radius: 8px; padding: 7px 14px; font-weight: 800; font-size: .82rem; cursor: pointer; white-space: nowrap; transition: background .2s; }
+    .btn-concluir:hover { background: #fff8e1; }
+
     .kanban-board::-webkit-scrollbar { height: 6px; }
     .kanban-board::-webkit-scrollbar-track { background: var(--gray-200); border-radius: 3px; }
     .kanban-board::-webkit-scrollbar-thumb { background: var(--gray-500); border-radius: 3px; }
@@ -291,6 +301,7 @@
         <span id="newLeadAlertText"></span>
       </div>
     </div>
+    <div id="retornoAlertBanner"></div>
     <div class="stats-row" id="statsRow"></div>
     <div class="kanban-board" id="kanbanBoard"></div>
     <div class="historico-section" id="historicoSection" style="display:none">
@@ -350,7 +361,6 @@ let selectedSeguro = null;
 let selectedAssessora = null;
 let selectedTipo = null;
 let unsubscribeLeads = null;
-let notifTimers = {};
 let pendingRetornoId = null;
 
 const STAGES = [
@@ -423,44 +433,46 @@ function todayLeadsCount() {
   }).length;
 }
 
-// NOTIFICAÇÕES
-function pedirPermissaoNotificacao() {
-  if ('Notification' in window && Notification.permission === 'default') {
-    Notification.requestPermission();
-  }
+// BANNER DE RETORNOS VENCIDOS
+let retornoInterval = null;
+
+function checkRetornoBanner() {
+  const el = document.getElementById('retornoAlertBanner');
+  if (!el) return;
+  const agora = Date.now();
+  const vencidos = leads.filter(l => {
+    if (l.stage !== 'retorno' || !l.retornoData) return false;
+    const rts = typeof l.retornoData === 'object' ? l.retornoData.toMillis?.() || l.retornoData : l.retornoData;
+    return rts <= agora;
+  });
+  if (vencidos.length === 0) { el.innerHTML = ''; return; }
+  const itens = vencidos.map(l => {
+    const rts = typeof l.retornoData === 'object' ? l.retornoData.toMillis?.() || l.retornoData : l.retornoData;
+    const horario = new Date(rts).toLocaleString('pt-BR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+    return `<div class="retorno-alert-item">
+      <div>
+        <div class="retorno-alert-info">&#128100; ${l.nome} &nbsp;|&nbsp; ${l.contato}</div>
+        <div class="retorno-alert-time">&#128197; Agendado para: ${horario}</div>
+      </div>
+      <button class="btn-concluir" onclick="concluirRetorno('${l.id}')">&#9989; Conclu&iacute;do</button>
+    </div>`;
+  }).join('');
+  el.innerHTML = `<div class="retorno-alert-banner">
+    <div class="banner-title">&#9888;&#65039; ${vencidos.length} retorno${vencidos.length > 1 ? 's' : ''} aguardando contato!</div>
+    ${itens}
+  </div>`;
 }
 
-function agendarNotificacoes() {
-  // Limpa timers anteriores
-  Object.values(notifTimers).forEach(t => clearTimeout(t));
-  notifTimers = {};
-
-  if (!('Notification' in window) || Notification.permission !== 'granted') return;
-
-  const agora = Date.now();
-  leads.forEach(l => {
-    if (l.stage !== 'retorno' || !l.retornoData) return;
-    const retornoTs = typeof l.retornoData === 'object' ? l.retornoData.toMillis?.() || l.retornoData : l.retornoData;
-    const msParaNotif = retornoTs - 3600000 - agora; // 1h antes
-    if (msParaNotif > 0 && msParaNotif < 86400000) { // só agenda se for nas próximas 24h
-      notifTimers[l.id] = setTimeout(() => {
-        new Notification('⏰ Lembrete de Retorno', {
-          body: `${l.nome} — retorno agendado para daqui 1 hora!`,
-          icon: '/favicon.ico'
-        });
-      }, msParaNotif);
-    }
-    // Notifica no momento exato também
-    const msExato = retornoTs - agora;
-    if (msExato > 0 && msExato < 86400000) {
-      notifTimers[l.id + '_exato'] = setTimeout(() => {
-        new Notification('🔔 Hora do Retorno!', {
-          body: `Hora de ligar para ${l.nome}!`,
-          icon: '/favicon.ico'
-        });
-      }, msExato);
-    }
-  });
+async function concluirRetorno(id) {
+  try {
+    const lead = leads.find(l => l.id === id);
+    if (!lead) return;
+    const history = [...(lead.history || []), { stage: 'contato', at: Date.now() }];
+    await updateDoc(doc(db, 'leads', id), { stage: 'contato', retornoData: null, history });
+    showToast('Retorno concluído! Lead movido para Contato Realizado.', '#00838f');
+  } catch(e) {
+    showToast('Erro ao concluir retorno.', '#e53935');
+  }
 }
 
 // SENHAS
@@ -506,8 +518,6 @@ function login(role) {
   const labels = { sdr: 'Consultor de Relacionamento', vendedor: 'Analista Comercial', gestor: 'Gestor' };
   document.getElementById('navRole').textContent = labels[role];
 
-  pedirPermissaoNotificacao();
-
   const q = query(collection(db, 'leads'), orderBy('createdAt', 'desc'));
   unsubscribeLeads = onSnapshot(q, snapshot => {
     leads = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -515,9 +525,13 @@ function login(role) {
       updateSdrCounter();
     } else {
       renderKanban();
-      agendarNotificacoes();
+      checkRetornoBanner();
     }
   });
+
+  if (role !== 'sdr') {
+    retornoInterval = setInterval(checkRetornoBanner, 60000);
+  }
 
   if (role === 'sdr') {
     document.getElementById('sdrScreen').style.display = 'block';
@@ -529,8 +543,7 @@ function login(role) {
 
 function logout() {
   if (unsubscribeLeads) { unsubscribeLeads(); unsubscribeLeads = null; }
-  Object.values(notifTimers).forEach(t => clearTimeout(t));
-  notifTimers = {};
+  if (retornoInterval) { clearInterval(retornoInterval); retornoInterval = null; }
   currentRole = null;
   leads = [];
   document.getElementById('loginScreen').style.display = 'flex';
@@ -1025,6 +1038,8 @@ window.formatPlaca       = formatPlaca;
 window.moveStage         = moveStage;
 window.moverLead         = moverLead;
 window.abrirAgendaRetorno= abrirAgendaRetorno;
+window.concluirRetorno   = concluirRetorno;
+window.checkRetornoBanner= checkRetornoBanner;
 window.confirmarRetorno  = confirmarRetorno;
 window.openWA            = openWA;
 window.openModal         = openModal;
