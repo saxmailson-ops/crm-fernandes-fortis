@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CRM Fernandes Fortis</title>
   <style>
-    /* ===== RESET & BASE ===== */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --primary: #1a237e;
@@ -14,8 +13,7 @@
       --danger: #e53935;
       --warn: #f57c00;
       --info: #0288d1;
-      --purple: #7b1fa2;
-      --gray-50: #fafafa;
+      --teal: #00838f;
       --gray-100: #f5f5f5;
       --gray-200: #eeeeee;
       --gray-300: #e0e0e0;
@@ -28,676 +26,158 @@
       --radius: 12px;
       --radius-sm: 8px;
     }
-    body {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      background: var(--gray-100);
-      color: var(--gray-900);
-      min-height: 100vh;
-    }
+    body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--gray-100); color: var(--gray-900); min-height: 100vh; }
 
-    /* ===== LOGIN / ROLE SELECTOR ===== */
-    .login-screen {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #1a237e 0%, #283593 50%, #3949ab 100%);
-    }
-    .login-card {
-      background: var(--white);
-      border-radius: 20px;
-      padding: 48px 40px;
-      width: 100%;
-      max-width: 420px;
-      box-shadow: var(--shadow-lg);
-      text-align: center;
-    }
-    .login-logo {
-      font-size: 2.4rem;
-      font-weight: 800;
-      color: var(--primary);
-      letter-spacing: -1px;
-      margin-bottom: 4px;
-    }
-    .login-subtitle {
-      color: var(--gray-500);
-      font-size: .9rem;
-      margin-bottom: 36px;
-    }
-    .role-btn {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      width: 100%;
-      padding: 18px 20px;
-      border: 2px solid var(--gray-200);
-      border-radius: var(--radius);
-      background: var(--white);
-      cursor: pointer;
-      transition: all .2s;
-      margin-bottom: 12px;
-      text-align: left;
-    }
+    /* LOGIN */
+    .login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg,#1a237e 0%,#283593 50%,#3949ab 100%); }
+    .login-card { background: var(--white); border-radius: 20px; padding: 48px 40px; width: 100%; max-width: 420px; box-shadow: var(--shadow-lg); text-align: center; }
+    .login-logo { font-size: 2.4rem; font-weight: 800; color: var(--primary); letter-spacing: -1px; margin-bottom: 4px; }
+    .login-subtitle { color: var(--gray-500); font-size: .9rem; margin-bottom: 36px; }
+    .role-btn { display: flex; align-items: center; gap: 14px; width: 100%; padding: 18px 20px; border: 2px solid var(--gray-200); border-radius: var(--radius); background: var(--white); cursor: pointer; transition: all .2s; margin-bottom: 12px; text-align: left; }
     .role-btn:hover { border-color: var(--primary-light); background: #f0f2ff; }
-    .role-btn .icon { font-size: 2rem; }
     .role-btn .label { font-weight: 700; font-size: 1rem; color: var(--gray-900); }
     .role-btn .desc  { font-size: .8rem; color: var(--gray-500); }
-
-    .pw-box {
-      display: none;
-      margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px solid var(--gray-200);
-    }
+    .pw-box { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--gray-200); }
     .pw-box.open { display: block; }
-    .pw-input {
-      width: 100%;
-      padding: 10px 12px;
-      border: 2px solid var(--gray-200);
-      border-radius: 8px;
-      font-size: .9rem;
-      outline: none;
-      margin-bottom: 8px;
-      transition: border-color .2s;
-    }
+    .pw-input { width: 100%; padding: 10px 12px; border: 2px solid var(--gray-200); border-radius: 8px; font-size: .9rem; outline: none; margin-bottom: 8px; transition: border-color .2s; }
     .pw-input:focus { border-color: var(--primary-light); }
     .pw-input.error { border-color: var(--danger); }
     .pw-error { font-size: .78rem; color: var(--danger); margin-bottom: 6px; display: none; }
     .pw-error.show { display: block; }
-    .btn-entrar {
-      width: 100%;
-      padding: 10px;
-      background: var(--primary);
-      color: var(--white);
-      border: none;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: .9rem;
-      cursor: pointer;
-      transition: background .2s;
-    }
+    .btn-entrar { width: 100%; padding: 10px; background: var(--primary); color: var(--white); border: none; border-radius: 8px; font-weight: 700; font-size: .9rem; cursor: pointer; transition: background .2s; }
     .btn-entrar:hover { background: var(--primary-light); }
 
-    /* ===== TOP NAV ===== */
-    .topnav {
-      background: var(--primary);
-      color: var(--white);
-      padding: 0 20px;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky; top: 0; z-index: 100;
-      box-shadow: var(--shadow);
-    }
-    .topnav-brand { font-weight: 800; font-size: 1.1rem; letter-spacing: .5px; }
-    .topnav-role {
-      font-size: .8rem;
-      background: rgba(255,255,255,.15);
-      padding: 4px 12px;
-      border-radius: 20px;
-    }
-    .logout-btn {
-      background: rgba(255,255,255,.15);
-      border: none; color: var(--white);
-      padding: 6px 14px; border-radius: 8px;
-      cursor: pointer; font-size: .85rem;
-      transition: background .2s;
-    }
+    /* NAV */
+    .topnav { background: var(--primary); color: var(--white); padding: 0 20px; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); }
+    .topnav-brand { font-weight: 800; font-size: 1.1rem; }
+    .topnav-role { font-size: .8rem; background: rgba(255,255,255,.15); padding: 4px 12px; border-radius: 20px; }
+    .logout-btn { background: rgba(255,255,255,.15); border: none; color: var(--white); padding: 6px 14px; border-radius: 8px; cursor: pointer; font-size: .85rem; transition: background .2s; }
     .logout-btn:hover { background: rgba(255,255,255,.28); }
 
-    /* ===== SDR SCREEN ===== */
-    .sdr-screen {
-      max-width: 480px;
-      margin: 0 auto;
-      padding: 24px 16px;
-    }
-    .sdr-header {
-      text-align: center;
-      margin-bottom: 28px;
-    }
-    .sdr-header h1 {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: var(--primary);
-    }
+    /* SDR */
+    .sdr-screen { max-width: 480px; margin: 0 auto; padding: 24px 16px; }
+    .sdr-header { text-align: center; margin-bottom: 28px; }
+    .sdr-header h1 { font-size: 1.5rem; font-weight: 800; color: var(--primary); }
     .sdr-header p { color: var(--gray-500); font-size: .9rem; margin-top: 4px; }
-
-    .counter-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      background: var(--primary);
-      color: var(--white);
-      border-radius: 40px;
-      padding: 10px 24px;
-      font-size: 1rem;
-      font-weight: 700;
-      margin-bottom: 28px;
-    }
-    .counter-badge .num {
-      font-size: 1.8rem;
-      font-weight: 900;
-      line-height: 1;
-    }
-
-    .form-card {
-      background: var(--white);
-      border-radius: var(--radius);
-      padding: 28px 24px;
-      box-shadow: var(--shadow);
-    }
+    .counter-badge { display: inline-flex; align-items: center; gap: 10px; background: var(--primary); color: var(--white); border-radius: 40px; padding: 10px 24px; font-size: 1rem; font-weight: 700; margin-bottom: 28px; }
+    .counter-badge .num { font-size: 1.8rem; font-weight: 900; line-height: 1; }
+    .form-card { background: var(--white); border-radius: var(--radius); padding: 28px 24px; box-shadow: var(--shadow); }
     .form-group { margin-bottom: 18px; }
-    .form-group label {
-      display: block;
-      font-weight: 600;
-      font-size: .88rem;
-      color: var(--gray-700);
-      margin-bottom: 6px;
-    }
-    .form-control {
-      width: 100%;
-      padding: 12px 14px;
-      border: 2px solid var(--gray-200);
-      border-radius: var(--radius-sm);
-      font-size: .95rem;
-      outline: none;
-      transition: border-color .2s;
-    }
+    .form-group label { display: block; font-weight: 600; font-size: .88rem; color: var(--gray-700); margin-bottom: 6px; }
+    .form-control { width: 100%; padding: 12px 14px; border: 2px solid var(--gray-200); border-radius: var(--radius-sm); font-size: .95rem; outline: none; transition: border-color .2s; }
     .form-control:focus { border-color: var(--primary-light); }
-
-    .radio-group {
-      display: flex;
-      gap: 10px;
-    }
-    .radio-btn {
-      flex: 1;
-      padding: 12px;
-      border: 2px solid var(--gray-200);
-      border-radius: var(--radius-sm);
-      background: var(--white);
-      cursor: pointer;
-      font-weight: 700;
-      font-size: .95rem;
-      text-align: center;
-      transition: all .2s;
-    }
+    .radio-group { display: flex; gap: 10px; }
+    .radio-btn { flex: 1; padding: 12px; border: 2px solid var(--gray-200); border-radius: var(--radius-sm); background: var(--white); cursor: pointer; font-weight: 700; font-size: .95rem; text-align: center; transition: all .2s; }
     .radio-btn.sim { color: var(--accent); }
     .radio-btn.nao { color: var(--danger); }
     .radio-btn.sim.active { background: #e8f5e9; border-color: var(--accent); }
     .radio-btn.nao.active { background: #ffebee; border-color: var(--danger); }
     .radio-btn.active { background: #e8eaf6; border-color: var(--primary); color: var(--primary); }
-
-    .btn-primary {
-      width: 100%;
-      padding: 15px;
-      background: var(--primary);
-      color: var(--white);
-      border: none;
-      border-radius: var(--radius-sm);
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background .2s;
-      margin-top: 8px;
-    }
+    .btn-primary { width: 100%; padding: 15px; background: var(--primary); color: var(--white); border: none; border-radius: var(--radius-sm); font-size: 1rem; font-weight: 700; cursor: pointer; transition: background .2s; margin-top: 8px; }
     .btn-primary:hover { background: var(--primary-light); }
     .btn-primary:disabled { background: var(--gray-300); cursor: not-allowed; }
-
-    .success-toast {
-      position: fixed;
-      bottom: 24px; left: 50%;
-      transform: translateX(-50%);
-      background: var(--accent);
-      color: var(--white);
-      padding: 14px 28px;
-      border-radius: 40px;
-      font-weight: 700;
-      font-size: .95rem;
-      box-shadow: var(--shadow-lg);
-      opacity: 0;
-      transition: opacity .3s;
-      pointer-events: none;
-      white-space: nowrap;
-    }
+    .success-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--accent); color: var(--white); padding: 14px 28px; border-radius: 40px; font-weight: 700; font-size: .95rem; box-shadow: var(--shadow-lg); opacity: 0; transition: opacity .3s; pointer-events: none; white-space: nowrap; z-index: 999; }
     .success-toast.show { opacity: 1; }
 
-    /* ===== KANBAN SCREEN ===== */
+    /* KANBAN */
     .kanban-screen { padding: 20px; }
-    .kanban-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
+    .kanban-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
     .kanban-title { font-size: 1.3rem; font-weight: 800; color: var(--primary); }
-
-    .stats-row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-    }
-    .stat-pill {
-      background: var(--white);
-      border-radius: 30px;
-      padding: 6px 16px;
-      font-size: .82rem;
-      font-weight: 600;
-      box-shadow: var(--shadow);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .dot {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      display: inline-block;
-    }
-
-    .kanban-board {
-      display: flex;
-      gap: 14px;
-      overflow-x: auto;
-      padding-bottom: 16px;
-      align-items: flex-start;
-    }
-    .kanban-col {
-      flex: 0 0 280px;
-      background: var(--gray-200);
-      border-radius: var(--radius);
-      padding: 14px;
-      min-height: 400px;
-    }
-    .col-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 12px;
-    }
-    .col-title {
-      font-size: .82rem;
-      font-weight: 800;
-      letter-spacing: .5px;
-      text-transform: uppercase;
-      padding: 4px 10px;
-      border-radius: 20px;
-    }
-    .col-count {
-      font-size: .8rem;
-      font-weight: 700;
-      color: var(--gray-500);
-      background: var(--white);
-      border-radius: 20px;
-      padding: 2px 10px;
-    }
-
-    /* Column colors */
+    .stats-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+    .stat-pill { background: var(--white); border-radius: 30px; padding: 6px 16px; font-size: .82rem; font-weight: 600; box-shadow: var(--shadow); display: flex; align-items: center; gap: 6px; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+    .kanban-board { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 16px; align-items: flex-start; }
+    .kanban-col { flex: 0 0 280px; background: var(--gray-200); border-radius: var(--radius); padding: 14px; min-height: 400px; }
+    .col-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .col-title { font-size: .82rem; font-weight: 800; letter-spacing: .5px; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; }
+    .col-count { font-size: .8rem; font-weight: 700; color: var(--gray-500); background: var(--white); border-radius: 20px; padding: 2px 10px; }
     .col-novo    .col-title { background: #e3f2fd; color: #1565c0; }
     .col-contato .col-title { background: #e8f5e9; color: #2e7d32; }
     .col-negoc   .col-title { background: #fff8e1; color: #e65100; }
     .col-aguard  .col-title { background: #f3e5f5; color: #6a1b9a; }
+    .col-retorno .col-title { background: #e0f7fa; color: #00838f; }
     .col-venda   .col-title { background: #e8f5e9; color: #1b5e20; }
     .col-perdido .col-title { background: #ffebee; color: #b71c1c; }
 
-    /* Card */
-    .lead-card {
-      background: var(--white);
-      border-radius: var(--radius-sm);
-      padding: 14px;
-      margin-bottom: 10px;
-      box-shadow: var(--shadow);
-      cursor: pointer;
-      transition: transform .15s, box-shadow .15s;
-      position: relative;
-    }
+    /* CARD */
+    .lead-card { background: var(--white); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 10px; box-shadow: var(--shadow); cursor: pointer; transition: transform .15s, box-shadow .15s; position: relative; }
     .lead-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
-    .lead-card.hot::before {
-      content: '🔥';
-      position: absolute;
-      top: 10px; right: 10px;
-      font-size: .9rem;
-    }
-    .lead-card.new-lead::after {
-      content: 'NOVO';
-      position: absolute;
-      top: 10px; right: 10px;
-      background: #1565c0;
-      color: white;
-      font-size: .65rem;
-      font-weight: 800;
-      padding: 2px 6px;
-      border-radius: 4px;
-    }
+    .lead-card.new-lead::after { content: 'NOVO'; position: absolute; top: 10px; right: 10px; background: #1565c0; color: white; font-size: .65rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; }
     .lead-name { font-weight: 700; font-size: .95rem; color: var(--gray-900); margin-bottom: 4px; }
-    .lead-meta {
-      font-size: .78rem;
-      color: var(--gray-500);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-    .lead-meta span { display: flex; align-items: center; gap: 3px; }
-    .badge-seguro {
-      font-size: .7rem;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 10px;
-      margin-top: 6px;
-      display: inline-block;
-    }
+    .lead-meta { font-size: .78rem; color: var(--gray-500); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .badge-seguro { font-size: .7rem; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-top: 6px; display: inline-block; }
     .badge-seguro.sim { background: #e8f5e9; color: var(--accent); }
     .badge-seguro.nao { background: #ffebee; color: var(--danger); }
-
-    .card-actions {
-      display: flex;
-      gap: 6px;
-      margin-top: 10px;
-    }
-    .btn-wa {
-      flex: 1;
-      background: #25d366;
-      color: var(--white);
-      border: none;
-      border-radius: 8px;
-      padding: 8px 10px;
-      font-size: .78rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-      transition: background .2s;
-    }
+    .card-actions { display: flex; gap: 6px; margin-top: 10px; }
+    .btn-wa { flex: 1; background: #25d366; color: var(--white); border: none; border-radius: 8px; padding: 8px 10px; font-size: .78rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; transition: background .2s; }
     .btn-wa:hover { background: #1eb856; }
-    .btn-move {
-      background: var(--primary);
-      color: var(--white);
-      border: none;
-      border-radius: 8px;
-      padding: 8px 10px;
-      font-size: .78rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      transition: background .2s;
-    }
+    .btn-move { background: var(--primary); color: var(--white); border: none; border-radius: 8px; padding: 8px 10px; font-size: .78rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; transition: background .2s; }
     .btn-move:hover { background: var(--primary-light); }
-    .btn-perdido {
-      background: var(--danger);
-      color: var(--white);
-      border: none;
-      border-radius: 8px;
-      padding: 8px 8px;
-      font-size: .78rem;
-      cursor: pointer;
-      border-radius: 8px;
-      transition: background .2s;
-    }
+    .btn-perdido { background: var(--danger); color: var(--white); border: none; border-radius: 8px; padding: 8px 8px; font-size: .78rem; cursor: pointer; transition: background .2s; }
     .btn-perdido:hover { background: #c62828; }
-
-    .time-badge {
-      font-size: .7rem;
-      color: var(--gray-500);
-      margin-top: 6px;
-      display: flex;
-      align-items: center;
-      gap: 3px;
-    }
+    .time-badge { font-size: .7rem; color: var(--gray-500); margin-top: 6px; display: flex; align-items: center; gap: 3px; }
     .time-badge.urgent { color: var(--warn); font-weight: 700; }
+    .retorno-badge { background: #e0f7fa; color: #00838f; font-size: .72rem; font-weight: 700; padding: 4px 10px; border-radius: 8px; margin-top: 6px; display: flex; align-items: center; gap: 4px; }
 
-    /* ===== NOTAS NO CARD ===== */
-    .card-notes {
-      margin-top: 8px;
-      border-top: 1px solid var(--gray-200);
-      padding-top: 8px;
-    }
-    .note-item {
-      background: #fffde7;
-      border-left: 3px solid #f9a825;
-      border-radius: 0 6px 6px 0;
-      padding: 6px 8px;
-      margin-bottom: 5px;
-      font-size: .76rem;
-      color: var(--gray-900);
-    }
-    .note-item .note-meta {
-      font-size: .68rem;
-      color: var(--gray-500);
-      margin-top: 2px;
-    }
-    .note-input-row {
-      display: flex;
-      gap: 6px;
-      margin-top: 6px;
-    }
-    .note-input {
-      flex: 1;
-      padding: 7px 10px;
-      border: 1.5px solid var(--gray-300);
-      border-radius: 6px;
-      font-size: .78rem;
-      font-family: inherit;
-      outline: none;
-      transition: border-color .2s;
-    }
+    /* NOTAS */
+    .card-notes { margin-top: 8px; border-top: 1px solid var(--gray-200); padding-top: 8px; }
+    .note-item { background: #fffde7; border-left: 3px solid #f9a825; border-radius: 0 6px 6px 0; padding: 6px 8px; margin-bottom: 5px; font-size: .76rem; color: var(--gray-900); }
+    .note-item .note-meta { font-size: .68rem; color: var(--gray-500); margin-top: 2px; }
+    .note-input-row { display: flex; gap: 6px; margin-top: 6px; }
+    .note-input { flex: 1; padding: 7px 10px; border: 1.5px solid var(--gray-300); border-radius: 6px; font-size: .78rem; font-family: inherit; outline: none; transition: border-color .2s; }
     .note-input:focus { border-color: var(--primary-light); }
-    .btn-note-add {
-      background: var(--primary);
-      color: var(--white);
-      border: none;
-      border-radius: 6px;
-      padding: 7px 12px;
-      font-size: .78rem;
-      font-weight: 700;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: background .2s;
-    }
+    .btn-note-add { background: var(--primary); color: var(--white); border: none; border-radius: 6px; padding: 7px 12px; font-size: .78rem; font-weight: 700; cursor: pointer; white-space: nowrap; transition: background .2s; }
     .btn-note-add:hover { background: var(--primary-light); }
-    .notes-toggle {
-      font-size: .72rem;
-      color: var(--primary-light);
-      cursor: pointer;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      margin-top: 4px;
-      background: none;
-      border: none;
-      padding: 0;
-    }
+    .notes-toggle { font-size: .72rem; color: var(--primary-light); cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 4px; margin-top: 4px; background: none; border: none; padding: 0; }
     .notes-toggle:hover { text-decoration: underline; }
 
-    /* ===== MODAL ===== */
-    .modal-overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,.5);
-      display: flex; align-items: center; justify-content: center;
-      z-index: 200;
-      padding: 16px;
-    }
-    .modal {
-      background: var(--white);
-      border-radius: var(--radius);
-      padding: 28px 24px;
-      width: 100%; max-width: 420px;
-      box-shadow: var(--shadow-lg);
-      position: relative;
-    }
+    /* MODAL */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: flex; align-items: center; justify-content: center; z-index: 200; padding: 16px; }
+    .modal { background: var(--white); border-radius: var(--radius); padding: 28px 24px; width: 100%; max-width: 440px; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-lg); position: relative; }
     .modal h3 { font-size: 1.1rem; font-weight: 800; color: var(--primary); margin-bottom: 16px; }
-    .modal-close {
-      position: absolute; top: 16px; right: 16px;
-      background: none; border: none; font-size: 1.3rem;
-      cursor: pointer; color: var(--gray-500);
-      line-height: 1;
-    }
+    .modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 1.3rem; cursor: pointer; color: var(--gray-500); line-height: 1; }
     .modal-field { margin-bottom: 12px; }
     .modal-field label { font-size: .8rem; font-weight: 600; color: var(--gray-500); }
     .modal-field p { font-weight: 600; color: var(--gray-900); margin-top: 2px; }
-    .modal-stages {
-      display: flex; flex-direction: column; gap: 8px; margin-top: 16px;
-    }
-    .stage-btn {
-      padding: 10px 14px;
-      border: 2px solid var(--gray-200);
-      border-radius: 8px;
-      background: var(--white);
-      cursor: pointer;
-      font-weight: 600;
-      font-size: .88rem;
-      text-align: left;
-      transition: all .2s;
-    }
+    .modal-field input, .modal-field select { width: 100%; padding: 8px 10px; border: 2px solid var(--gray-200); border-radius: 8px; font-size: .9rem; outline: none; margin-top: 4px; transition: border-color .2s; font-family: inherit; }
+    .modal-field input:focus, .modal-field select:focus { border-color: var(--primary-light); }
+    .modal-stages { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+    .stage-btn { padding: 10px 14px; border: 2px solid var(--gray-200); border-radius: 8px; background: var(--white); cursor: pointer; font-weight: 600; font-size: .88rem; text-align: left; transition: all .2s; }
     .stage-btn:hover { border-color: var(--primary-light); background: #f0f2ff; color: var(--primary); }
     .stage-btn.current { border-color: var(--primary); background: #e8eaf6; color: var(--primary); }
-
-    .obs-textarea {
-      width: 100%;
-      min-height: 80px;
-      border: 2px solid var(--gray-200);
-      border-radius: 8px;
-      padding: 10px;
-      font-size: .88rem;
-      font-family: inherit;
-      resize: vertical;
-      outline: none;
-      transition: border-color .2s;
-    }
-    .obs-textarea:focus { border-color: var(--primary-light); }
-    .btn-save {
-      width: 100%;
-      padding: 12px;
-      background: var(--primary);
-      color: var(--white);
-      border: none;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: .95rem;
-      cursor: pointer;
-      margin-top: 12px;
-    }
+    .btn-save { width: 100%; padding: 12px; background: var(--primary); color: var(--white); border: none; border-radius: 8px; font-weight: 700; font-size: .95rem; cursor: pointer; margin-top: 12px; transition: background .2s; }
     .btn-save:hover { background: var(--primary-light); }
+    .btn-edit { padding: 6px 14px; background: #fff8e1; color: #e65100; border: 2px solid #ffe082; border-radius: 8px; font-weight: 700; font-size: .82rem; cursor: pointer; transition: all .2s; }
+    .btn-edit:hover { background: #ffe082; }
+    .new-lead-alert { background: linear-gradient(135deg,#1565c0,#1a237e); color: var(--white); border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; font-size: .88rem; font-weight: 600; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(21,101,192,.4); } 50% { box-shadow: 0 0 0 8px rgba(21,101,192,0); } }
 
-    .new-lead-alert {
-      background: linear-gradient(135deg, #1565c0, #1a237e);
-      color: var(--white);
-      border-radius: 12px;
-      padding: 12px 16px;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: .88rem;
-      font-weight: 600;
-      animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(21,101,192,.4); }
-      50% { box-shadow: 0 0 0 8px rgba(21,101,192,0); }
-    }
-
-    /* ===== HISTORICO DIARIO ===== */
-    .historico-section {
-      margin: 28px 0 20px 0;
-      background: var(--white);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
-    .historico-header {
-      background: var(--primary);
-      color: var(--white);
-      padding: 14px 20px;
-      font-weight: 800;
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .historico-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    .historico-table th {
-      background: #e8eaf6;
-      color: var(--primary);
-      font-size: .82rem;
-      font-weight: 700;
-      padding: 10px 16px;
-      text-align: left;
-      border-bottom: 2px solid var(--gray-200);
-    }
-    .historico-table td {
-      padding: 10px 16px;
-      font-size: .88rem;
-      border-bottom: 1px solid var(--gray-200);
-      vertical-align: middle;
-    }
+    /* HISTORICO */
+    .historico-section { margin: 28px 0 20px 0; background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+    .historico-header { background: var(--primary); color: var(--white); padding: 14px 20px; font-weight: 800; font-size: 1rem; display: flex; align-items: center; gap: 8px; }
+    .historico-table { width: 100%; border-collapse: collapse; }
+    .historico-table th { background: #e8eaf6; color: var(--primary); font-size: .82rem; font-weight: 700; padding: 10px 16px; text-align: left; border-bottom: 2px solid var(--gray-200); }
+    .historico-table td { padding: 10px 16px; font-size: .88rem; border-bottom: 1px solid var(--gray-200); vertical-align: middle; }
     .historico-table tr:last-child td { border-bottom: none; }
     .historico-table tr:hover td { background: #f5f5f5; }
-    .historico-bar {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .historico-bar-fill {
-      height: 10px;
-      border-radius: 5px;
-      background: var(--primary);
-      transition: width .3s;
-    }
-    .historico-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--primary);
-      color: var(--white);
-      border-radius: 20px;
-      padding: 2px 10px;
-      font-size: .78rem;
-      font-weight: 800;
-      min-width: 28px;
-    }
-    .hoje-tag {
-      background: #e8f5e9;
-      color: #1b5e20;
-      font-size: .72rem;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 10px;
-      margin-left: 6px;
-    }
-
-    /* Scrollbar kanban */
+    .historico-bar { display: flex; align-items: center; gap: 8px; }
+    .historico-bar-fill { height: 10px; border-radius: 5px; background: var(--primary); transition: width .3s; }
+    .historico-badge { display: inline-flex; align-items: center; justify-content: center; background: var(--primary); color: var(--white); border-radius: 20px; padding: 2px 10px; font-size: .78rem; font-weight: 800; min-width: 28px; }
+    .hoje-tag { background: #e8f5e9; color: #1b5e20; font-size: .72rem; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-left: 6px; }
     .kanban-board::-webkit-scrollbar { height: 6px; }
     .kanban-board::-webkit-scrollbar-track { background: var(--gray-200); border-radius: 3px; }
     .kanban-board::-webkit-scrollbar-thumb { background: var(--gray-500); border-radius: 3px; }
-
-    @media (max-width: 600px) {
-      .kanban-col { flex: 0 0 250px; }
-      .kanban-screen { padding: 12px; }
-    }
+    @media (max-width: 600px) { .kanban-col { flex: 0 0 250px; } .kanban-screen { padding: 12px; } }
   </style>
 </head>
 <body>
 
-<!-- ===================== LOGIN ===================== -->
+<!-- LOGIN -->
 <div id="loginScreen" class="login-screen">
   <div class="login-card">
     <div class="login-logo">Fernandes Fortis</div>
     <div class="login-subtitle">CRM de Capta&ccedil;&atilde;o &middot; Selecione seu perfil</div>
-    <!-- Consultor -->
     <div class="role-btn" onclick="togglePw('sdr', event)">
-      <span class="icon"></span>
       <div style="flex:1">
         <div class="label">&#128663; Consultor de Relacionamento</div>
         <div class="desc">Capta&ccedil;&atilde;o de leads em campo</div>
@@ -708,10 +188,7 @@
         </div>
       </div>
     </div>
-
-    <!-- Analista -->
     <div class="role-btn" onclick="togglePw('vendedor', event)">
-      <span class="icon"></span>
       <div style="flex:1">
         <div class="label">&#128188; Analista Comercial</div>
         <div class="desc">Atendimento, Kanban e follow-up</div>
@@ -722,10 +199,7 @@
         </div>
       </div>
     </div>
-
-    <!-- Gestor -->
     <div class="role-btn" onclick="togglePw('gestor', event)">
-      <span class="icon"></span>
       <div style="flex:1">
         <div class="label">&#128202; Gestor</div>
         <div class="desc">Vis&atilde;o completa do pipeline</div>
@@ -739,7 +213,7 @@
   </div>
 </div>
 
-<!-- ===================== NAV ===================== -->
+<!-- NAV -->
 <nav class="topnav" id="topNav" style="display:none">
   <div class="topnav-brand">&#9889; Fernandes Fortis</div>
   <div style="display:flex;align-items:center;gap:10px">
@@ -748,21 +222,19 @@
   </div>
 </nav>
 
-<!-- ===================== SDR SCREEN ===================== -->
+<!-- SDR SCREEN -->
 <div id="sdrScreen" style="display:none">
   <div class="sdr-screen">
     <div class="sdr-header">
       <h1>&#128205; Capta&ccedil;&atilde;o de Lead</h1>
       <p>Novo Prospecto</p>
     </div>
-
-    <div style="text-align:center; margin-bottom:24px">
+    <div style="text-align:center;margin-bottom:24px">
       <div class="counter-badge">
         <span>Leads captados hoje:</span>
         <span class="num" id="sdrCounter">0</span>
       </div>
     </div>
-
     <div class="form-card">
       <div class="form-group">
         <label>&#128100; Nome completo</label>
@@ -770,13 +242,19 @@
       </div>
       <div class="form-group">
         <label>&#128241; Contato (WhatsApp)</label>
-        <input class="form-control" id="fContato" type="tel" placeholder="(00) 00000-0000"
-          oninput="formatPhone(this)" maxlength="15" />
+        <input class="form-control" id="fContato" type="tel" placeholder="(00) 00000-0000" oninput="formatPhone(this)" maxlength="15" />
       </div>
       <div class="form-group">
         <label>&#128664; Placa do ve&iacute;culo</label>
-        <input class="form-control" id="fPlaca" type="text" placeholder="Ex: ABC-1234"
-          oninput="formatPlaca(this)" maxlength="8" style="text-transform:uppercase" />
+        <input class="form-control" id="fPlaca" type="text" placeholder="Ex: ABC-1234" oninput="formatPlaca(this)" maxlength="8" style="text-transform:uppercase" />
+      </div>
+      <div class="form-group">
+        <label>&#128663; Tipo de ve&iacute;culo</label>
+        <div class="radio-group">
+          <button class="radio-btn" id="btnTipo1" onclick="selectTipo('Passeio')">&#128664; Passeio</button>
+          <button class="radio-btn" id="btnTipo2" onclick="selectTipo('APP')">&#128241; APP</button>
+          <button class="radio-btn" id="btnTipo3" onclick="selectTipo('Moto')">&#127949; Moto</button>
+        </div>
       </div>
       <div class="form-group">
         <label>&#128737; Tem seguro no momento?</label>
@@ -786,20 +264,18 @@
         </div>
       </div>
       <div class="form-group">
-        <label>&#128101; Assessora Comercial:</label>
+        <label>&#128101; Assessora Comercial</label>
         <div class="radio-group">
           <button class="radio-btn" id="btnAssessora1" onclick="selectAssessora('Monique Rodrigues')">Monique Rodrigues</button>
           <button class="radio-btn" id="btnAssessora2" onclick="selectAssessora('Juliana Moreira')">Juliana Moreira</button>
         </div>
       </div>
-      <button class="btn-primary" id="btnSalvar" onclick="salvarLead()">
-        Cadastrar Lead
-      </button>
+      <button class="btn-primary" id="btnSalvar" onclick="salvarLead()">Cadastrar Lead</button>
     </div>
   </div>
 </div>
 
-<!-- ===================== KANBAN SCREEN ===================== -->
+<!-- KANBAN SCREEN -->
 <div id="kanbanScreen" style="display:none">
   <div class="kanban-screen">
     <div class="kanban-top">
@@ -815,33 +291,19 @@
         <span id="newLeadAlertText"></span>
       </div>
     </div>
-
     <div class="stats-row" id="statsRow"></div>
-
     <div class="kanban-board" id="kanbanBoard"></div>
-
-    <!-- HISTORICO DIARIO - só aparece para o gestor -->
     <div class="historico-section" id="historicoSection" style="display:none">
-      <div class="historico-header">
-        &#128197; Hist&oacute;rico de Capta&ccedil;&atilde;o por Dia
-      </div>
+      <div class="historico-header">&#128197; Hist&oacute;rico de Capta&ccedil;&atilde;o por Dia</div>
       <table class="historico-table">
-        <thead>
-          <tr>
-            <th>Data</th>
-            <th>Leads Captados</th>
-            <th>Volume</th>
-            <th>Vendas</th>
-            <th>Convers&atilde;o</th>
-          </tr>
-        </thead>
+        <thead><tr><th>Data</th><th>Leads Captados</th><th>Volume</th><th>Vendas</th><th>Convers&atilde;o</th></tr></thead>
         <tbody id="historicoBody"></tbody>
       </table>
     </div>
   </div>
 </div>
 
-<!-- ===================== MODAL DETALHES ===================== -->
+<!-- MODAL -->
 <div class="modal-overlay" id="modalOverlay" style="display:none" onclick="closeModal(event)">
   <div class="modal" onclick="event.stopPropagation()">
     <button class="modal-close" onclick="closeModal()">&#x2715;</button>
@@ -850,14 +312,26 @@
   </div>
 </div>
 
+<!-- MODAL RETORNO (data/hora) -->
+<div class="modal-overlay" id="retornoOverlay" style="display:none" onclick="event.stopPropagation()">
+  <div class="modal" onclick="event.stopPropagation()" style="max-width:360px">
+    <button class="modal-close" onclick="document.getElementById('retornoOverlay').style.display='none'">&#x2715;</button>
+    <h3>&#128197; Agendar Retorno</h3>
+    <p style="font-size:.88rem;color:var(--gray-500);margin-bottom:16px">Defina quando entrar em contato novamente com este cliente.</p>
+    <div class="modal-field">
+      <label>Data e hora do retorno</label>
+      <input type="datetime-local" id="retornoDateInput" style="width:100%;padding:10px;border:2px solid var(--gray-200);border-radius:8px;font-size:.95rem;outline:none;margin-top:4px" />
+    </div>
+    <button class="btn-save" onclick="confirmarRetorno()">&#9989; Confirmar Retorno</button>
+  </div>
+</div>
+
 <div class="success-toast" id="toast"></div>
 
-<!-- Firebase SDK -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, addDoc, updateDoc, doc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// ===== FIREBASE CONFIG =====
 const firebaseConfig = {
   apiKey: "AIzaSyD4fgCu2LYsGRPBs4mrjgMTgzdEwFVxfZI",
   authDomain: "fernandes-fortis-crm.firebaseapp.com",
@@ -869,33 +343,27 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db  = getFirestore(app);
 
-// ===== STATE =====
+// STATE
 let currentRole = null;
 let leads = [];
 let selectedSeguro = null;
 let selectedAssessora = null;
+let selectedTipo = null;
 let unsubscribeLeads = null;
+let notifTimers = {};
+let pendingRetornoId = null;
 
-// ===== STAGES CONFIG =====
 const STAGES = [
   { id: 'novo',    label: 'NOVO LEAD',               color: '#1565c0', bg: '#e3f2fd', col: 'col-novo' },
   { id: 'contato', label: 'CONTATO REALIZADO',        color: '#2e7d32', bg: '#e8f5e9', col: 'col-contato' },
-  { id: 'negoc',   label: 'NEGOCIA&Ccedil;&Atilde;O',               color: '#e65100', bg: '#fff8e1', col: 'col-negoc' },
+  { id: 'negoc',   label: 'NEGOCIAÇÃO',               color: '#e65100', bg: '#fff8e1', col: 'col-negoc' },
   { id: 'aguard',  label: 'AGUARDANDO DOC/PAGAMENTO', color: '#6a1b9a', bg: '#f3e5f5', col: 'col-aguard' },
+  { id: 'retorno', label: 'RETORNO FUTURO',           color: '#00838f', bg: '#e0f7fa', col: 'col-retorno' },
   { id: 'venda',   label: 'VENDA',                    color: '#1b5e20', bg: '#e8f5e9', col: 'col-venda' },
   { id: 'perdido', label: 'LEAD PERDIDO',             color: '#b71c1c', bg: '#ffebee', col: 'col-perdido' },
 ];
 
-// ===== UTILS =====
-async function saveLeadToFirestore(lead) {
-  const { id, ...data } = lead;
-  await addDoc(collection(db, 'leads'), data);
-}
-
-async function updateLeadInFirestore(id, fields) {
-  await updateDoc(doc(db, 'leads', id), fields);
-}
-
+// UTILS
 function formatPhone(el) {
   let v = el.value.replace(/\D/g, '');
   if (v.length > 11) v = v.slice(0, 11);
@@ -923,6 +391,13 @@ function selectAssessora(val) {
   document.getElementById('btnAssessora2').classList.toggle('active', val === 'Juliana Moreira');
 }
 
+function selectTipo(val) {
+  selectedTipo = val;
+  document.getElementById('btnTipo1').classList.toggle('active', val === 'Passeio');
+  document.getElementById('btnTipo2').classList.toggle('active', val === 'APP');
+  document.getElementById('btnTipo3').classList.toggle('active', val === 'Moto');
+}
+
 function showToast(msg, color) {
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -934,23 +409,62 @@ function showToast(msg, color) {
 function timeAgo(ts) {
   const diff = Math.floor((Date.now() - ts) / 60000);
   if (diff < 1) return 'agora mesmo';
-  if (diff === 1) return '1 min atr&aacute;s';
-  if (diff < 60) return `${diff} min atr&aacute;s`;
+  if (diff === 1) return '1 min atrás';
+  if (diff < 60) return `${diff} min atrás`;
   const h = Math.floor(diff / 60);
-  return `${h}h atr&aacute;s`;
+  return `${h}h atrás`;
 }
 
 function todayLeadsCount() {
   const today = new Date().toDateString();
-  return leads.filter(l => { const ts = l.createdAt?.toMillis ? l.createdAt.toMillis() : l.createdAt; return new Date(ts).toDateString() === today; }).length;
+  return leads.filter(l => {
+    const ts = l.createdAt?.toMillis ? l.createdAt.toMillis() : l.createdAt;
+    return new Date(ts).toDateString() === today;
+  }).length;
 }
 
-// ===== SENHAS POR PERFIL =====
-const SENHAS = {
-  sdr:      'consultor@ff',
-  vendedor: 'analista@ff',
-  gestor:   'sntcruz'
-};
+// NOTIFICAÇÕES
+function pedirPermissaoNotificacao() {
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+}
+
+function agendarNotificacoes() {
+  // Limpa timers anteriores
+  Object.values(notifTimers).forEach(t => clearTimeout(t));
+  notifTimers = {};
+
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+
+  const agora = Date.now();
+  leads.forEach(l => {
+    if (l.stage !== 'retorno' || !l.retornoData) return;
+    const retornoTs = typeof l.retornoData === 'object' ? l.retornoData.toMillis?.() || l.retornoData : l.retornoData;
+    const msParaNotif = retornoTs - 3600000 - agora; // 1h antes
+    if (msParaNotif > 0 && msParaNotif < 86400000) { // só agenda se for nas próximas 24h
+      notifTimers[l.id] = setTimeout(() => {
+        new Notification('⏰ Lembrete de Retorno', {
+          body: `${l.nome} — retorno agendado para daqui 1 hora!`,
+          icon: '/favicon.ico'
+        });
+      }, msParaNotif);
+    }
+    // Notifica no momento exato também
+    const msExato = retornoTs - agora;
+    if (msExato > 0 && msExato < 86400000) {
+      notifTimers[l.id + '_exato'] = setTimeout(() => {
+        new Notification('🔔 Hora do Retorno!', {
+          body: `Hora de ligar para ${l.nome}!`,
+          icon: '/favicon.ico'
+        });
+      }, msExato);
+    }
+  });
+}
+
+// SENHAS
+const SENHAS = { sdr: 'consultor@ff', vendedor: 'analista@ff', gestor: 'sntcruz' };
 
 function togglePw(role, e) {
   e && e.stopPropagation();
@@ -964,9 +478,7 @@ function togglePw(role, e) {
   });
   const box = document.getElementById('pw-' + role);
   box.classList.toggle('open');
-  if (box.classList.contains('open')) {
-    setTimeout(() => document.getElementById('pwi-' + role).focus(), 50);
-  }
+  if (box.classList.contains('open')) setTimeout(() => document.getElementById('pwi-' + role).focus(), 50);
 }
 
 function tentarLogin(role) {
@@ -986,7 +498,7 @@ function tentarLogin(role) {
   }
 }
 
-// ===== AUTH =====
+// AUTH
 function login(role) {
   currentRole = role;
   document.getElementById('loginScreen').style.display = 'none';
@@ -994,7 +506,8 @@ function login(role) {
   const labels = { sdr: 'Consultor de Relacionamento', vendedor: 'Analista Comercial', gestor: 'Gestor' };
   document.getElementById('navRole').textContent = labels[role];
 
-  // Listener em tempo real do Firestore
+  pedirPermissaoNotificacao();
+
   const q = query(collection(db, 'leads'), orderBy('createdAt', 'desc'));
   unsubscribeLeads = onSnapshot(q, snapshot => {
     leads = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -1002,6 +515,7 @@ function login(role) {
       updateSdrCounter();
     } else {
       renderKanban();
+      agendarNotificacoes();
     }
   });
 
@@ -1015,8 +529,9 @@ function login(role) {
 
 function logout() {
   if (unsubscribeLeads) { unsubscribeLeads(); unsubscribeLeads = null; }
+  Object.values(notifTimers).forEach(t => clearTimeout(t));
+  notifTimers = {};
   currentRole = null;
-  selectedSeguro = null;
   leads = [];
   document.getElementById('loginScreen').style.display = 'flex';
   document.getElementById('topNav').style.display = 'none';
@@ -1027,11 +542,15 @@ function logout() {
   document.getElementById('btnNao').classList.remove('active');
   document.getElementById('btnAssessora1').classList.remove('active');
   document.getElementById('btnAssessora2').classList.remove('active');
+  document.getElementById('btnTipo1').classList.remove('active');
+  document.getElementById('btnTipo2').classList.remove('active');
+  document.getElementById('btnTipo3').classList.remove('active');
   selectedSeguro = null;
   selectedAssessora = null;
+  selectedTipo = null;
 }
 
-// ===== SDR =====
+// SDR
 function updateSdrCounter() {
   document.getElementById('sdrCounter').textContent = todayLeadsCount();
 }
@@ -1041,11 +560,12 @@ async function salvarLead() {
   const contato = document.getElementById('fContato').value.trim();
   const placa   = document.getElementById('fPlaca').value.trim();
 
-  if (!nome)    { showToast('Informe o nome', '#f57c00'); return; }
-  if (!contato) { showToast('Informe o contato', '#f57c00'); return; }
-  if (!placa)   { showToast('Informe a placa', '#f57c00'); return; }
-  if (!selectedSeguro) { showToast('Selecione se tem seguro', '#f57c00'); return; }
-  if (!selectedAssessora) { showToast('Selecione a Assessora Comercial', '#f57c00'); return; }
+  if (!nome)             { showToast('Informe o nome', '#f57c00'); return; }
+  if (!contato)          { showToast('Informe o contato', '#f57c00'); return; }
+  if (!placa)            { showToast('Informe a placa', '#f57c00'); return; }
+  if (!selectedTipo)     { showToast('Selecione o tipo de veículo', '#f57c00'); return; }
+  if (!selectedSeguro)   { showToast('Selecione se tem seguro', '#f57c00'); return; }
+  if (!selectedAssessora){ showToast('Selecione a Assessora Comercial', '#f57c00'); return; }
 
   const btnSalvar = document.getElementById('btnSalvar');
   btnSalvar.disabled = true;
@@ -1053,36 +573,37 @@ async function salvarLead() {
 
   try {
     await addDoc(collection(db, 'leads'), {
-      nome,
-      contato,
+      nome, contato,
       placa: placa.toUpperCase(),
+      tipo: selectedTipo,
       seguro: selectedSeguro,
       assessora: selectedAssessora,
       stage: 'novo',
-      createdAt: Date.now(), // timestamp em ms
+      createdAt: Date.now(),
       notes: [],
       history: [{ stage: 'novo', at: Date.now() }]
     });
-
-    document.getElementById('fNome').value = '';
-    document.getElementById('fContato').value = '';
-    document.getElementById('fPlaca').value = '';
+    ['fNome','fContato','fPlaca'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('btnSim').classList.remove('active');
     document.getElementById('btnNao').classList.remove('active');
     document.getElementById('btnAssessora1').classList.remove('active');
     document.getElementById('btnAssessora2').classList.remove('active');
+    document.getElementById('btnTipo1').classList.remove('active');
+    document.getElementById('btnTipo2').classList.remove('active');
+    document.getElementById('btnTipo3').classList.remove('active');
     selectedSeguro = null;
     selectedAssessora = null;
+    selectedTipo = null;
     showToast('Lead cadastrado com sucesso!');
   } catch(e) {
-    showToast('Erro ao salvar. Verifique a conex&atilde;o.', '#e53935');
+    showToast('Erro ao salvar. Verifique a conexão.', '#e53935');
   } finally {
     btnSalvar.disabled = false;
     btnSalvar.textContent = 'Cadastrar Lead';
   }
 }
 
-// ===== KANBAN =====
+// KANBAN
 function visibleLeads() {
   const input = document.getElementById('searchInput');
   const q = input ? input.value.trim().toLowerCase() : '';
@@ -1099,15 +620,10 @@ function visibleLeads() {
 function renderKanban() {
   const all = visibleLeads();
 
-  // New leads alert (< 16 min, stage=novo)
-  const justArrived = leads.filter(l => {
-    const ts = l.createdAt?.toMillis ? l.createdAt.toMillis() : l.createdAt; const age = (Date.now() - ts) / 60000;
-    return age >= 15 && age < 16 && l.stage === 'novo';
-  });
   const alertEl = document.getElementById('newLeadAlert');
   const waitingContact = all.filter(l => {
-    const ts = l.createdAt?.toMillis ? l.createdAt.toMillis() : l.createdAt; const age = (Date.now() - ts) / 60000;
-    return l.stage === 'novo' && age >= 15;
+    const ts = l.createdAt?.toMillis ? l.createdAt.toMillis() : l.createdAt;
+    return l.stage === 'novo' && (Date.now() - ts) / 60000 >= 15;
   });
   if (waitingContact.length > 0) {
     alertEl.style.display = 'flex';
@@ -1117,18 +633,15 @@ function renderKanban() {
     alertEl.style.display = 'none';
   }
 
-  // Stats
-  const statsRow = document.getElementById('statsRow');
-  const stageColors = { novo:'#1565c0', contato:'#2e7d32', negoc:'#e65100', aguard:'#7b1fa2', venda:'#1b5e20', perdido:'#e53935' };
-  const statLabels = { novo:'Novos', contato:'Contactados', negoc:'Negocia&ccedil;&atilde;o', aguard:'Aguard. Doc', venda:'Vendas', perdido:'Perdidos' };
+  const stageColors = { novo:'#1565c0', contato:'#2e7d32', negoc:'#e65100', aguard:'#7b1fa2', retorno:'#00838f', venda:'#1b5e20', perdido:'#e53935' };
+  const statLabels  = { novo:'Novos', contato:'Contactados', negoc:'Negociação', aguard:'Aguard. Doc', retorno:'Retorno', venda:'Vendas', perdido:'Perdidos' };
   let statsHtml = '';
   STAGES.forEach(s => {
     const cnt = all.filter(l => l.stage === s.id).length;
     statsHtml += `<div class="stat-pill"><span class="dot" style="background:${stageColors[s.id]}"></span>${statLabels[s.id]}: <b>${cnt}</b></div>`;
   });
-  statsRow.innerHTML = statsHtml;
+  document.getElementById('statsRow').innerHTML = statsHtml;
 
-  // Board
   renderHistorico();
   const board = document.getElementById('kanbanBoard');
   board.innerHTML = '';
@@ -1141,14 +654,10 @@ function renderKanban() {
         <span class="col-title">${s.label}</span>
         <span class="col-count">${stageLeads.length}</span>
       </div>
-      <div class="col-cards" id="cards-${s.id}"></div>
-    `;
+      <div class="col-cards" id="cards-${s.id}"></div>`;
     board.appendChild(col);
-
     const cardsEl = col.querySelector('.col-cards');
-    stageLeads.forEach(lead => {
-      cardsEl.appendChild(buildCard(lead));
-    });
+    stageLeads.forEach(lead => cardsEl.appendChild(buildCard(lead)));
   });
 }
 
@@ -1157,26 +666,23 @@ function buildNotesHtml(lead) {
   if (notes.length === 0) {
     return `<div class="card-notes">
       <div class="note-input-row">
-        <input class="note-input" id="ni-${lead.id}" placeholder="&#128221; Registrar liga&ccedil;&atilde;o ou obs..." onkeydown="if(event.key==='Enter')addNote('${lead.id}')" />
+        <input class="note-input" id="ni-${lead.id}" placeholder="&#128221; Registrar ligação ou obs..." onkeydown="if(event.key==='Enter')addNote('${lead.id}')" />
         <button class="btn-note-add" onclick="addNote('${lead.id}')">+ Obs</button>
-      </div>
-    </div>`;
+      </div></div>`;
   }
   const last2 = notes.slice(-2);
   const hasMore = notes.length > 2;
   const notesHtml = last2.map(n => `
-    <div class="note-item">
-      ${n.text}
-      <div class="note-meta">${new Date(n.at).toLocaleString('pt-BR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</div>
+    <div class="note-item">${n.text}
+      <div class="note-meta">${new Date(n.at).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</div>
     </div>`).join('');
   return `<div class="card-notes">
-    ${hasMore ? `<button class="notes-toggle" onclick="openModal('${lead.id}')">Ver todas (${notes.length} anota&ccedil;&otilde;es)</button>` : ''}
+    ${hasMore ? `<button class="notes-toggle" onclick="openModal('${lead.id}')">Ver todas (${notes.length} anotações)</button>` : ''}
     ${notesHtml}
     <div class="note-input-row">
       <input class="note-input" id="ni-${lead.id}" placeholder="&#128221; Nova obs..." onkeydown="if(event.key==='Enter')addNote('${lead.id}')" />
       <button class="btn-note-add" onclick="addNote('${lead.id}')">+ Obs</button>
-    </div>
-  </div>`;
+    </div></div>`;
 }
 
 async function addNote(id) {
@@ -1189,15 +695,16 @@ async function addNote(id) {
   const notes = [...(lead.notes || []), { text, at: Date.now() }];
   try {
     await updateDoc(doc(db, 'leads', id), { notes });
-    showToast('Anota&ccedil;&atilde;o salva!');
+    showToast('Anotação salva!');
   } catch(e) {
-    showToast('Erro ao salvar anota&ccedil;&atilde;o.', '#e53935');
+    showToast('Erro ao salvar anotação.', '#e53935');
   }
 }
 
 function buildCard(lead) {
   const div = document.createElement('div');
-  const tsMin = lead.createdAt?.toMillis ? lead.createdAt.toMillis() : lead.createdAt; const ageMin = (Date.now() - tsMin) / 60000;
+  const tsMin = lead.createdAt?.toMillis ? lead.createdAt.toMillis() : lead.createdAt;
+  const ageMin = (Date.now() - tsMin) / 60000;
   const isNew = lead.stage === 'novo' && ageMin < 30;
   const isUrgent = lead.stage === 'novo' && ageMin >= 15 && ageMin < 60;
   div.className = `lead-card${isNew && ageMin < 60 ? ' new-lead' : ''}`;
@@ -1206,36 +713,83 @@ function buildCard(lead) {
   const stageIdx = STAGES.findIndex(s => s.id === lead.stage);
   const nextStage = stageIdx < STAGES.length - 2 ? STAGES[stageIdx + 1] : null;
 
+  // Retorno badge
+  let retornoBadge = '';
+  if (lead.stage === 'retorno' && lead.retornoData) {
+    const rts = typeof lead.retornoData === 'object' ? lead.retornoData.toMillis?.() || lead.retornoData : lead.retornoData;
+    const rDate = new Date(rts).toLocaleString('pt-BR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+    retornoBadge = `<div class="retorno-badge">&#128197; Retorno: ${rDate}</div>`;
+  } else if (lead.stage === 'retorno' && !lead.retornoData) {
+    retornoBadge = `<div style="margin-top:6px"><button onclick="abrirAgendaRetorno('${lead.id}')" style="width:100%;padding:7px;background:#e0f7fa;color:#00838f;border:2px solid #00838f;border-radius:8px;font-weight:700;font-size:.78rem;cursor:pointer;">&#128197; Definir data de retorno</button></div>`;
+  }
+
+  // Tipo badge
+  const tipoEmoji = { Passeio: '🚗', APP: '📱', Moto: '🏍️' };
+  const tipoBadge = lead.tipo ? `<span style="font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:10px;background:#f3e5f5;color:#7b1fa2;margin-left:4px">${tipoEmoji[lead.tipo]||''} ${lead.tipo}</span>` : '';
+
   div.innerHTML = `
     <div class="lead-name">${lead.nome}</div>
-    <div class="lead-meta">
-      <span>${lead.contato}</span>
-      <span>${lead.placa}</span>
-    </div>
+    <div class="lead-meta"><span>${lead.contato}</span><span>${lead.placa}</span></div>
     <div>
       <span class="badge-seguro ${lead.seguro}">${lead.seguro === 'sim' ? '&#128737;&#65039; Tem seguro' : '&#10060; Sem seguro'}</span>
-      ${lead.assessora ? `<span style="font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:10px;margin-top:4px;display:inline-block;background:#e8eaf6;color:var(--primary);margin-left:4px">&#128101; ${lead.assessora}</span>` : ''}
+      ${tipoBadge}
+      ${lead.assessora ? `<span style="font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:10px;background:#e8eaf6;color:var(--primary);margin-left:4px">&#128101; ${lead.assessora}</span>` : ''}
     </div>
+    ${retornoBadge}
     ${buildNotesHtml(lead)}
-    <div class="time-badge ${isUrgent ? 'urgent' : ''}">
-      ${isUrgent ? '!' : ''} ${timeAgo(lead.createdAt)}
-    </div>
+    <div class="time-badge ${isUrgent ? 'urgent' : ''}">${isUrgent ? '⚠️' : '🕐'} ${timeAgo(lead.createdAt)}</div>
     <div class="card-actions">
-      <button class="btn-wa" onclick="openWA('${phoneRaw}', '${lead.nome}', '${lead.placa}')">
+      <button class="btn-wa" onclick="openWA('${phoneRaw}','${lead.nome.replace(/'/g,"\\'")}','${lead.placa}')">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
         WhatsApp
       </button>
-      ${nextStage ? `<button class="btn-move" onclick="moveStage('${lead.id}', '${nextStage.id}')">&#x2192; ${nextStage.label.split(' ')[0]}</button>` : ''}
-      ${lead.stage !== 'perdido' ? `<button class="btn-perdido" onclick="moveStage('${lead.id}', 'perdido')" title="Marcar como perdido">&#x2715;</button>` : ''}
-    </div>
-  `;
+      ${nextStage ? `<button class="btn-move" onclick="moverLead('${lead.id}','${nextStage.id}')">&#x2192; ${nextStage.label.split(' ')[0]}</button>` : ''}
+      ${lead.stage !== 'perdido' ? `<button class="btn-perdido" onclick="moveStage('${lead.id}','perdido')" title="Marcar como perdido">&#x2715;</button>` : ''}
+    </div>`;
   div.querySelector('.lead-name').addEventListener('click', () => openModal(lead.id));
   return div;
 }
 
 function openWA(phone, nome, placa) {
-  const msg = encodeURIComponent(`Oi, ${nome}! Aqui \u00e9 a equipe Fernandes Fortis. J\u00e1 levantei a base do seu carro e ficou uma condi\u00e7\u00e3o interessante. Posso te mandar a simula\u00e7\u00e3o?`);
+  const msg = encodeURIComponent(`Oi, ${nome}! Aqui é a equipe Fernandes Fortis. Já levantei a base do seu carro e ficou uma condição interessante. Posso te mandar a simulação?`);
   window.open(`https://wa.me/55${phone}?text=${msg}`, '_blank');
+}
+
+// Move com interceptação para retorno
+function moverLead(id, newStage) {
+  if (newStage === 'retorno') {
+    abrirAgendaRetorno(id);
+  } else {
+    moveStage(id, newStage);
+  }
+}
+
+function abrirAgendaRetorno(id) {
+  pendingRetornoId = id;
+  // Define valor mínimo como agora
+  const now = new Date();
+  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+  document.getElementById('retornoDateInput').min = now.toISOString().slice(0,16);
+  document.getElementById('retornoDateInput').value = '';
+  document.getElementById('retornoOverlay').style.display = 'flex';
+}
+
+async function confirmarRetorno() {
+  const val = document.getElementById('retornoDateInput').value;
+  if (!val) { showToast('Defina a data e hora', '#f57c00'); return; }
+  const ts = new Date(val).getTime();
+  if (!pendingRetornoId) return;
+  const lead = leads.find(l => l.id === pendingRetornoId);
+  if (!lead) return;
+  const history = [...(lead.history || []), { stage: 'retorno', at: Date.now() }];
+  try {
+    await updateDoc(doc(db, 'leads', pendingRetornoId), { stage: 'retorno', retornoData: ts, history });
+    showToast('Retorno agendado!', '#00838f');
+    document.getElementById('retornoOverlay').style.display = 'none';
+    pendingRetornoId = null;
+  } catch(e) {
+    showToast('Erro ao agendar retorno.', '#e53935');
+  }
 }
 
 async function moveStage(id, newStage) {
@@ -1251,51 +805,115 @@ async function moveStage(id, newStage) {
   }
 }
 
-// ===== MODAL =====
+// MODAL
 function openModal(id) {
   const lead = leads.find(l => l.id === id);
   if (!lead) return;
   const s = STAGES.find(s => s.id === lead.stage);
+
+  const retornoInfo = lead.retornoData
+    ? (() => {
+        const rts = typeof lead.retornoData === 'object' ? lead.retornoData.toMillis?.() || lead.retornoData : lead.retornoData;
+        return `<div class="modal-field"><label>Data de Retorno</label><p>&#128197; ${new Date(rts).toLocaleString('pt-BR')}</p></div>`;
+      })()
+    : '';
+
   const stagesHtml = STAGES
     .filter(st => st.id !== lead.stage)
-    .map(st => `<button class="stage-btn${st.id===lead.stage?' current':''}" onclick="moveStage('${lead.id}','${st.id}'); closeModal(); renderKanban()">${st.label}</button>`)
+    .map(st => `<button class="stage-btn" onclick="moverLead('${lead.id}','${st.id}');closeModal()">${st.label}</button>`)
     .join('');
 
   document.getElementById('modalContent').innerHTML = `
-    <div class="modal-field"><label>Nome</label><p>${lead.nome}</p></div>
-    <div class="modal-field"><label>Contato</label><p>${lead.contato}</p></div>
-    <div class="modal-field"><label>Placa</label><p>${lead.placa}</p></div>
-    <div class="modal-field"><label>Seguro atual</label><p>${lead.seguro === 'sim' ? '&#128737;&#65039; Tem seguro' : '&#10060; Sem seguro'}</p></div>
-    ${lead.assessora ? `<div class="modal-field"><label>Assessora Comercial</label><p>&#128101; ${lead.assessora}</p></div>` : ''}
-    <div class="modal-field"><label>Est&aacute;gio atual</label><p>${s.label}</p></div>
-    <div class="modal-field"><label>Captado em</label><p>${new Date(lead.createdAt?.toMillis ? lead.createdAt.toMillis() : lead.createdAt).toLocaleString('pt-BR')}</p></div>
-    <div class="modal-field">
-      <label>&#128203; Hist&oacute;rico de anota&ccedil;&otilde;es (${(lead.notes||[]).length})</label>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
+      <button class="btn-edit" onclick="abrirEdicao('${lead.id}')">&#9999;&#65039; Editar dados</button>
+    </div>
+    <div id="modalViewMode">
+      <div class="modal-field"><label>Nome</label><p>${lead.nome}</p></div>
+      <div class="modal-field"><label>Contato</label><p>${lead.contato}</p></div>
+      <div class="modal-field"><label>Placa</label><p>${lead.placa}</p></div>
+      <div class="modal-field"><label>Tipo de veículo</label><p>${lead.tipo || '—'}</p></div>
+      <div class="modal-field"><label>Seguro atual</label><p>${lead.seguro === 'sim' ? '&#128737;&#65039; Tem seguro' : '&#10060; Sem seguro'}</p></div>
+      ${lead.assessora ? `<div class="modal-field"><label>Assessora Comercial</label><p>&#128101; ${lead.assessora}</p></div>` : ''}
+      <div class="modal-field"><label>Estágio atual</label><p>${s.label}</p></div>
+      ${retornoInfo}
+      <div class="modal-field"><label>Captado em</label><p>${new Date(lead.createdAt?.toMillis ? lead.createdAt.toMillis() : lead.createdAt).toLocaleString('pt-BR')}</p></div>
+    </div>
+    <div id="modalEditMode" style="display:none">
+      <div class="modal-field"><label>Nome</label><input id="editNome" value="${lead.nome}" /></div>
+      <div class="modal-field"><label>Contato (WhatsApp)</label><input id="editContato" value="${lead.contato}" /></div>
+      <div class="modal-field"><label>Placa</label><input id="editPlaca" value="${lead.placa}" style="text-transform:uppercase" /></div>
+      <div class="modal-field"><label>Tipo de veículo</label>
+        <select id="editTipo">
+          <option value="Passeio" ${lead.tipo==='Passeio'?'selected':''}>🚗 Passeio</option>
+          <option value="APP" ${lead.tipo==='APP'?'selected':''}>📱 APP</option>
+          <option value="Moto" ${lead.tipo==='Moto'?'selected':''}>🏍️ Moto</option>
+        </select>
+      </div>
+      <div class="modal-field"><label>Seguro</label>
+        <select id="editSeguro">
+          <option value="sim" ${lead.seguro==='sim'?'selected':''}>✅ Tem seguro</option>
+          <option value="nao" ${lead.seguro==='nao'?'selected':''}>❌ Sem seguro</option>
+        </select>
+      </div>
+      <div class="modal-field"><label>Assessora Comercial</label>
+        <select id="editAssessora">
+          <option value="Monique Rodrigues" ${lead.assessora==='Monique Rodrigues'?'selected':''}>Monique Rodrigues</option>
+          <option value="Juliana Moreira" ${lead.assessora==='Juliana Moreira'?'selected':''}>Juliana Moreira</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn-save" onclick="salvarEdicao('${lead.id}')">&#9989; Salvar alterações</button>
+        <button onclick="document.getElementById('modalEditMode').style.display='none';document.getElementById('modalViewMode').style.display='block'" style="flex:1;padding:12px;background:#f5f5f5;border:none;border-radius:8px;cursor:pointer;font-weight:600">Cancelar</button>
+      </div>
+    </div>
+    <div class="modal-field" style="margin-top:16px">
+      <label>&#128203; Histórico de anotações (${(lead.notes||[]).length})</label>
       <div style="max-height:200px;overflow-y:auto;margin-top:6px">
-        ${(lead.notes||[]).length === 0 ? '<p style="color:var(--gray-500);font-size:.82rem">Nenhuma anota&ccedil;&atilde;o ainda.</p>' :
+        ${(lead.notes||[]).length === 0 ? '<p style="color:var(--gray-500);font-size:.82rem">Nenhuma anotação ainda.</p>' :
           [...(lead.notes||[])].reverse().map(n => `
-            <div class="note-item">
-              ${n.text}
+            <div class="note-item">${n.text}
               <div class="note-meta">${new Date(n.at).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</div>
             </div>`).join('')}
       </div>
       <div class="note-input-row" style="margin-top:8px">
-        <input class="note-input" id="modalNoteInput" placeholder="Nova anota&ccedil;&atilde;o..." onkeydown="if(event.key==='Enter')addNoteFromModal('${lead.id}')" />
+        <input class="note-input" id="modalNoteInput" placeholder="Nova anotação..." onkeydown="if(event.key==='Enter')addNoteFromModal('${lead.id}')" />
         <button class="btn-note-add" onclick="addNoteFromModal('${lead.id}')">+ Obs</button>
       </div>
     </div>
     <div style="margin-top:16px">
-      <label style="font-size:.8rem;font-weight:600;color:var(--gray-500)">Mover para est&aacute;gio</label>
+      <label style="font-size:.8rem;font-weight:600;color:var(--gray-500)">Mover para estágio</label>
       <div class="modal-stages">${stagesHtml}</div>
     </div>
     <div style="margin-top:16px">
-      <button class="btn-wa" style="width:100%" onclick="openWA('${lead.contato.replace(/\D/g,'')}', '${lead.nome}', '${lead.placa}')">
+      <button class="btn-wa" style="width:100%" onclick="openWA('${lead.contato.replace(/\D/g,'')}','${lead.nome.replace(/'/g,"\\'")}','${lead.placa}')">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
         Abrir WhatsApp
       </button>
-    </div>
-  `;
+    </div>`;
   document.getElementById('modalOverlay').style.display = 'flex';
+}
+
+function abrirEdicao(id) {
+  document.getElementById('modalViewMode').style.display = 'none';
+  document.getElementById('modalEditMode').style.display = 'block';
+}
+
+async function salvarEdicao(id) {
+  const nome     = document.getElementById('editNome').value.trim();
+  const contato  = document.getElementById('editContato').value.trim();
+  const placa    = document.getElementById('editPlaca').value.trim().toUpperCase();
+  const tipo     = document.getElementById('editTipo').value;
+  const seguro   = document.getElementById('editSeguro').value;
+  const assessora= document.getElementById('editAssessora').value;
+
+  if (!nome || !contato || !placa) { showToast('Preencha todos os campos', '#f57c00'); return; }
+  try {
+    await updateDoc(doc(db, 'leads', id), { nome, contato, placa, tipo, seguro, assessora });
+    showToast('Dados atualizados!');
+    closeModal();
+  } catch(e) {
+    showToast('Erro ao salvar.', '#e53935');
+  }
 }
 
 async function addNoteFromModal(id) {
@@ -1308,10 +926,10 @@ async function addNoteFromModal(id) {
   const notes = [...(lead.notes || []), { text, at: Date.now() }];
   try {
     await updateDoc(doc(db, 'leads', id), { notes });
-    showToast('Anota&ccedil;&atilde;o salva!');
+    showToast('Anotação salva!');
     openModal(id);
   } catch(e) {
-    showToast('Erro ao salvar anota&ccedil;&atilde;o.', '#e53935');
+    showToast('Erro ao salvar anotação.', '#e53935');
   }
 }
 
@@ -1322,29 +940,30 @@ function closeModal(e) {
   }
 }
 
-// ===== EXPORTAR CSV =====
+// CSV
 function exportarCSV() {
-  const headers = ['Nome','Contato','Placa','Seguro','Assessora','Etapa','Captado em','Observacoes'];
+  const headers = ['Nome','Contato','Placa','Tipo','Seguro','Assessora','Etapa','Retorno','Captado em','Observacoes'];
   const stageLabels = {
     novo:'NOVO LEAD', contato:'CONTATO REALIZADO', negoc:'NEGOCIACAO',
-    aguard:'AGUARDANDO DOC/PAGAMENTO', venda:'VENDA', perdido:'LEAD PERDIDO'
+    aguard:'AGUARDANDO DOC/PAGAMENTO', retorno:'RETORNO FUTURO', venda:'VENDA', perdido:'LEAD PERDIDO'
   };
   const rows = leads.map(l => {
     const ts = l.createdAt?.toMillis ? l.createdAt.toMillis() : l.createdAt;
+    const rts = l.retornoData ? (typeof l.retornoData === 'object' ? l.retornoData.toMillis?.() || l.retornoData : l.retornoData) : null;
     const notes = (l.notes||[]).map(n=>n.text).join(' | ');
     return [
-      l.nome,
-      l.contato,
-      l.placa,
+      l.nome, l.contato, l.placa,
+      l.tipo || '',
       l.seguro === 'sim' ? 'Tem seguro' : 'Sem seguro',
       l.assessora || '',
       stageLabels[l.stage] || l.stage,
+      rts ? new Date(rts).toLocaleString('pt-BR') : '',
       new Date(ts).toLocaleString('pt-BR'),
       notes
     ].map(v => `"${String(v||'').replace(/"/g,'""')}"`).join(',');
   });
   const csv = [headers.join(','), ...rows].join('\n');
-  const blob = new Blob(['\uFEFF' + csv], {type:'text/csv;charset=utf-8;'});
+  const blob = new Blob(['﻿' + csv], {type:'text/csv;charset=utf-8;'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
@@ -1354,12 +973,10 @@ function exportarCSV() {
   showToast('Arquivo CSV baixado!');
 }
 
-// ===== HISTORICO DIARIO =====
+// HISTORICO
 function renderHistorico() {
   if (currentRole !== 'gestor') return;
   document.getElementById('historicoSection').style.display = 'block';
-
-  // Agrupar leads por dia
   const porDia = {};
   leads.forEach(l => {
     const ts = l.createdAt?.toMillis ? l.createdAt.toMillis() : l.createdAt;
@@ -1369,57 +986,53 @@ function renderHistorico() {
     if (l.stage === 'venda') porDia[dia].vendas++;
     if (ts > porDia[dia].ts) porDia[dia].ts = ts;
   });
-
-  // Ordenar por data mais recente
   const dias = Object.keys(porDia).sort((a, b) => porDia[b].ts - porDia[a].ts);
   const maxTotal = Math.max(...dias.map(d => porDia[d].total), 1);
   const hoje = new Date().toLocaleDateString('pt-BR');
-
   const tbody = document.getElementById('historicoBody');
   if (!dias.length) {
     tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--gray-500);padding:24px">Nenhum lead captado ainda.</td></tr>';
     return;
   }
-
   tbody.innerHTML = dias.map(dia => {
     const d = porDia[dia];
     const conv = d.total > 0 ? Math.round((d.vendas / d.total) * 100) : 0;
     const barW = Math.round((d.total / maxTotal) * 120);
-    const isHoje = dia === hoje;
     return `<tr>
-      <td><b>${dia}</b>${isHoje ? '<span class="hoje-tag">hoje</span>' : ''}</td>
+      <td><b>${dia}</b>${dia===hoje?'<span class="hoje-tag">hoje</span>':''}</td>
       <td><span class="historico-badge">${d.total}</span></td>
-      <td>
-        <div class="historico-bar">
-          <div class="historico-bar-fill" style="width:${barW}px"></div>
-          <span style="font-size:.75rem;color:var(--gray-500)">${d.total} lead${d.total>1?'s':''}</span>
-        </div>
-      </td>
+      <td><div class="historico-bar"><div class="historico-bar-fill" style="width:${barW}px"></div><span style="font-size:.75rem;color:var(--gray-500)">${d.total} lead${d.total>1?'s':''}</span></div></td>
       <td style="color:#1b5e20;font-weight:700">${d.vendas}</td>
       <td style="color:${conv>=20?'#1b5e20':conv>=10?'#e65100':'#e53935'};font-weight:700">${conv}%</td>
     </tr>`;
   }).join('');
 }
 
-// ===== EXPOR FUN&Ccedil;&Otilde;ES AO ESCOPO GLOBAL (m&oacute;dulo ES) =====
-window.renderKanban  = renderKanban;
-window.exportarCSV   = exportarCSV;
-window.renderHistorico = renderHistorico;
-window.togglePw      = togglePw;
-window.tentarLogin   = tentarLogin;
-window.login         = login;
-window.logout        = logout;
-window.salvarLead    = salvarLead;
-window.selectSeguro  = selectSeguro;
-window.selectAssessora = selectAssessora;
-window.formatPhone   = formatPhone;
-window.formatPlaca   = formatPlaca;
-window.moveStage     = moveStage;
-window.openWA        = openWA;
-window.openModal     = openModal;
-window.closeModal    = closeModal;
-window.addNote       = addNote;
-window.addNoteFromModal = addNoteFromModal;
+// EXPORTS
+window.renderKanban      = renderKanban;
+window.exportarCSV       = exportarCSV;
+window.renderHistorico   = renderHistorico;
+window.togglePw          = togglePw;
+window.tentarLogin       = tentarLogin;
+window.login             = login;
+window.logout            = logout;
+window.salvarLead        = salvarLead;
+window.selectSeguro      = selectSeguro;
+window.selectAssessora   = selectAssessora;
+window.selectTipo        = selectTipo;
+window.formatPhone       = formatPhone;
+window.formatPlaca       = formatPlaca;
+window.moveStage         = moveStage;
+window.moverLead         = moverLead;
+window.abrirAgendaRetorno= abrirAgendaRetorno;
+window.confirmarRetorno  = confirmarRetorno;
+window.openWA            = openWA;
+window.openModal         = openModal;
+window.closeModal        = closeModal;
+window.abrirEdicao       = abrirEdicao;
+window.salvarEdicao      = salvarEdicao;
+window.addNote           = addNote;
+window.addNoteFromModal  = addNoteFromModal;
 </script>
 </body>
 </html>
