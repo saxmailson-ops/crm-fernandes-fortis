@@ -304,6 +304,14 @@
     </div>
     <div id="retornoAlertBanner"></div>
     <div id="assessoraFilterRow" style="display:none;gap:8px;padding:8px 0;flex-wrap:wrap"></div>
+    <div id="dateFilterRow" style="display:flex;align-items:center;gap:8px;padding:6px 0;flex-wrap:wrap">
+      <span style="font-size:.82rem;font-weight:700;color:var(--gray-500)">&#128197; Período:</span>
+      <input type="date" id="filterFrom" oninput="aplicarFiltroData()" style="border:2px solid var(--gray-200);border-radius:8px;padding:5px 10px;font-size:.82rem;outline:none;cursor:pointer" />
+      <span style="font-size:.82rem;color:var(--gray-500)">até</span>
+      <input type="date" id="filterTo" oninput="aplicarFiltroData()" style="border:2px solid var(--gray-200);border-radius:8px;padding:5px 10px;font-size:.82rem;outline:none;cursor:pointer" />
+      <button onclick="limparFiltroData()" style="padding:5px 12px;border:2px solid var(--gray-200);border-radius:8px;background:white;font-size:.78rem;font-weight:600;color:var(--gray-500);cursor:pointer">&#10006; Limpar</button>
+      <span id="dateFilterInfo" style="font-size:.78rem;color:var(--primary);font-weight:700"></span>
+    </div>
     <div class="stats-row" id="statsRow"></div>
     <div class="kanban-board" id="kanbanBoard"></div>
     <div class="historico-section" id="historicoSection" style="display:none">
@@ -363,6 +371,8 @@ let selectedSeguro = null;
 let selectedAssessora = null;
 let selectedTipo = null;
 let selectedAssessoraFilter = null;
+let filterDateFrom = null;
+let filterDateTo = null;
 let unsubscribeLeads = null;
 let pendingRetornoId = null;
 
@@ -626,12 +636,42 @@ function visibleLeads() {
   const qDigits = q.replace(/\D/g, '');
   return leads.filter(l => {
     if (selectedAssessoraFilter && l.assessora !== selectedAssessoraFilter) return false;
+    if (filterDateFrom || filterDateTo) {
+      const ts = l.createdAt?.toMillis ? l.createdAt.toMillis() : l.createdAt;
+      if (filterDateFrom && ts < filterDateFrom) return false;
+      if (filterDateTo && ts > filterDateTo) return false;
+    }
     if (!q) return true;
     return l.nome?.toLowerCase().includes(q) ||
       l.placa?.toLowerCase().includes(q) ||
       l.contato?.toLowerCase().includes(q) ||
       (qDigits && l.contato?.replace(/\D/g, '').includes(qDigits));
   });
+}
+
+function aplicarFiltroData() {
+  const from = document.getElementById('filterFrom').value;
+  const to = document.getElementById('filterTo').value;
+  filterDateFrom = from ? new Date(from + 'T00:00:00').getTime() : null;
+  filterDateTo   = to   ? new Date(to   + 'T23:59:59').getTime() : null;
+  const info = document.getElementById('dateFilterInfo');
+  if (filterDateFrom || filterDateTo) {
+    const f = from ? new Date(from + 'T12:00:00').toLocaleDateString('pt-BR') : '...';
+    const t = to   ? new Date(to   + 'T12:00:00').toLocaleDateString('pt-BR') : '...';
+    info.textContent = `Filtrando: ${f} → ${t}`;
+  } else {
+    info.textContent = '';
+  }
+  renderKanban();
+}
+
+function limparFiltroData() {
+  filterDateFrom = null;
+  filterDateTo = null;
+  document.getElementById('filterFrom').value = '';
+  document.getElementById('filterTo').value = '';
+  document.getElementById('dateFilterInfo').textContent = '';
+  renderKanban();
 }
 
 function selectAssessoraFilter(name) {
@@ -761,6 +801,7 @@ function buildCard(lead) {
       ${lead.assessora ? `<span style="font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:10px;background:#e8eaf6;color:var(--primary);margin-left:4px">&#128101; ${lead.assessora}</span>` : ''}
     </div>
     ${retornoBadge}
+    ${lead.fechamentoData ? `<div style="margin-top:4px;font-size:.72rem;font-weight:700;color:#1b5e20;background:#e8f5e9;border-radius:8px;padding:3px 8px;display:inline-block">&#127881; Fechado: ${new Date(lead.fechamentoData).toLocaleDateString('pt-BR')}</div>` : ''}
     ${buildNotesHtml(lead)}
     <div class="time-badge ${isUrgent ? 'urgent' : ''}">${isUrgent ? '⚠️' : '🕐'} ${timeAgo(lead.createdAt)}</div>
     <div class="card-actions">
@@ -821,8 +862,10 @@ async function moveStage(id, newStage) {
   const lead = leads.find(l => l.id === id);
   if (!lead) return;
   const history = [...(lead.history || []), { stage: newStage, at: Date.now() }];
+  const update = { stage: newStage, history };
+  if (newStage === 'venda') update.fechamentoData = Date.now();
   try {
-    await updateDoc(doc(db, 'leads', id), { stage: newStage, history });
+    await updateDoc(doc(db, 'leads', id), update);
     const s = STAGES.find(s => s.id === newStage);
     showToast(`Movido para: ${s.label}`);
   } catch(e) {
@@ -861,6 +904,7 @@ function openModal(id) {
       ${lead.assessora ? `<div class="modal-field"><label>Assessora Comercial</label><p>&#128101; ${lead.assessora}</p></div>` : ''}
       <div class="modal-field"><label>Estágio atual</label><p>${s.label}</p></div>
       ${retornoInfo}
+      ${lead.fechamentoData ? `<div class="modal-field"><label>&#127881; Data de Fechamento (Venda)</label><p style="color:#1b5e20;font-weight:700">${new Date(lead.fechamentoData).toLocaleString('pt-BR')}</p></div>` : ''}
       <div class="modal-field"><label>Captado em</label><p>${new Date(lead.createdAt?.toMillis ? lead.createdAt.toMillis() : lead.createdAt).toLocaleString('pt-BR')}</p></div>
     </div>
     <div id="modalEditMode" style="display:none">
@@ -967,7 +1011,7 @@ function closeModal(e) {
 
 // CSV
 function exportarCSV() {
-  const headers = ['Nome','Contato','Placa','Tipo','Seguro','Assessora','Etapa','Retorno','Captado em','Observacoes'];
+  const headers = ['Nome','Contato','Placa','Tipo','Seguro','Assessora','Etapa','Retorno','Fechamento','Captado em','Observacoes'];
   const stageLabels = {
     novo:'NOVO LEAD', contato:'CONTATO REALIZADO', negoc:'NEGOCIACAO',
     aguard:'AGUARDANDO DOC/PAGAMENTO', retorno:'RETORNO FUTURO', venda:'VENDA', perdido:'LEAD PERDIDO'
@@ -983,6 +1027,7 @@ function exportarCSV() {
       l.assessora || '',
       stageLabels[l.stage] || l.stage,
       rts ? new Date(rts).toLocaleString('pt-BR') : '',
+      l.fechamentoData ? new Date(l.fechamentoData).toLocaleString('pt-BR') : '',
       new Date(ts).toLocaleString('pt-BR'),
       notes
     ].map(v => `"${String(v||'').replace(/"/g,'""')}"`).join(',');
@@ -1094,6 +1139,8 @@ window.salvarEdicao      = salvarEdicao;
 window.addNote           = addNote;
 window.addNoteFromModal      = addNoteFromModal;
 window.selectAssessoraFilter = selectAssessoraFilter;
+window.aplicarFiltroData     = aplicarFiltroData;
+window.limparFiltroData      = limparFiltroData;
 </script>
 </body>
 </html>
